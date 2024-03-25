@@ -1,0 +1,14 @@
+import CreateNewAdmin from "../../../Components/AdminComponents/SuperAdminComponents/CreateNewAdmin"
+
+
+function CreateAdmin() {
+  return (        
+    <div className=" m-10">
+      <h1 className=' border-b font-semibold text-3xl pb-10'>Add New Admin</h1>
+
+      <CreateNewAdmin />
+    </div>
+  )
+}
+
+export default CreateAdmin
