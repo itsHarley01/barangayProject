@@ -22,27 +22,6 @@ function Dashboard() {
   const [submissions, setSubmissions] = useState({});
   const [submissionsByDate, setSubmissionsByDate] = useState([]);
   const [loading, setLoading] = useState(true); 
-
-
-  const [barData, setBarData] = useState({
-    labels: ['Barangay-clearance', 'PWD Application', 'Senior Citizen Application', 'Complaints'],
-    datasets: [{
-      label: 'Total Submissions',
-      data: [submissionTypes['barangay-clearance'].pending + submissionTypes['barangay-clearance'].approved,
-             submissionTypes['pwd'].pending + submissionTypes['pwd'].approved,
-             submissionTypes['senior'].pending + submissionTypes['senior'].approved,
-             submissionTypes['complaints']],
-      backgroundColor: ['rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)'],
-      borderColor: ['rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)'],
-      borderWidth: 1,
-    }],
-  });
   
 
   const chartContainer = useRef(null);
@@ -215,7 +194,25 @@ function Dashboard() {
   
       barChartInstance.current = new Chart(barCtx, {
         type: 'bar',
-        data: barData,
+        data: {
+          labels: ['Barangay-clearance', 'PWD Application', 'Senior Citizen Application', 'Complaints'],
+    datasets: [{
+      label: '',
+      data: [submissionTypes['barangay-clearance'].pending + submissionTypes['barangay-clearance'].approved,
+             submissionTypes['pwd'].pending + submissionTypes['pwd'].approved,
+             submissionTypes['senior'].pending + submissionTypes['senior'].approved,
+             submissionTypes['complaints']],
+      backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)'],
+      borderColor: ['rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'],
+      borderWidth: 1,
+    }],
+        },
         options: {
           responsive: true,
           scales: {
@@ -226,10 +223,15 @@ function Dashboard() {
               stacked: true,
             },
           },
+          plugins: {
+            legend: {
+              display: false, // Set display to false to remove the legend
+            },
+          },
         },
       });
     }
-  }, [loading, barData]);
+  }, [loading]);
   
   
   
@@ -286,7 +288,7 @@ function Dashboard() {
             )}
           </div>
 
-          <div className='w-auto justify-center'>
+          <div className='w-full h-full justify-center'>
             {loading ? (
               <LoadingAnimation/>
             ) : (
@@ -294,7 +296,7 @@ function Dashboard() {
                 <canvas className='w-full h-full' ref={barChartContainer} />
                 <div className='w-full h-full'>
 
-                  <canvas data={barData} />
+                  <canvas/>
                 </div>
               </div>
             )}
