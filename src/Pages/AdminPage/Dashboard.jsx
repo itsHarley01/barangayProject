@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getDatabase,ref as dbref, get } from 'firebase/database';
-import {Chart, Bar } from 'chart.js/auto';
+import Chart from 'chart.js/auto';
 import { registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import 'chartjs-adapter-date-fns';
@@ -142,7 +142,8 @@ function Dashboard() {
       setTotalUsers(totalUsersCount);
 
       setSubmissionsByDate(submissionsByDate);
-      console.log(submissionsByDate)
+      //console.log(submissionsByDate)
+      //console.log()
       setLoading(false); 
     };
 
@@ -292,8 +293,8 @@ function Dashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <canvas className='w-full h-full' ref={barChartContainer} />
                 <div className='w-full h-full'>
-                  <h2 className="text-xl font-semibold mb-4">Total Submissions</h2>
-                  <Bar data={barData} />
+
+                  <canvas data={barData} />
                 </div>
               </div>
             )}
