@@ -40,7 +40,7 @@ function MVGfh() {
   <div className="flex flex-col md:flex-row bg-gray-100 rounded-lg p-6 items-center">
     <div className="md:w-1/3">
       {captainImageUrl && (
-        <img src={captainImageUrl} alt="Mission Vision Goal" className="w-full" />
+        <img src={captainImageUrl} alt="Mission Vision Goal" className="w-full " />
       )}
     </div>
     <div className="md:w-2/3 md:pl-4">

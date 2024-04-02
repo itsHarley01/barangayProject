@@ -96,6 +96,7 @@ function ApprovedSubmissions() {
           email: submissionData.email,
           firstName: submissionData.firstName,
           lastName: submissionData.lastName,
+          address: submissionData.address,
           dateApproved:submissionData.dateApproved,
           middleName: submissionData.middleName,
           reason: submissionData.reason,
@@ -224,6 +225,10 @@ function ApprovedSubmissions() {
                             <div className="grid grid-cols-2">
                               <span className="font-semibold">Last Name:</span>
                               <span className="border border-gray-300 p-1">{selectedSubmission.details.lastName}</span>
+                            </div>
+                            <div className="grid grid-cols-2">
+                              <span className="font-semibold">Address:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.address}</span>
                             </div>
                             <div className="grid grid-cols-2">
                               <span className="font-semibold">Contact:</span>

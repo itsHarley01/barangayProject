@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { getDatabase, ref, get, child } from 'firebase/database';
-import bg from '../../assets/Images/img1.jpg';
+import bg from '../../assets/Images/bgbb.png';
 import logo from '../../assets/Images/logo.png';
 import LoadingAnimation from '../../Components/Loading/LoadingAnimation';
 
@@ -52,7 +52,7 @@ function LoginPage() {
     <div className="min-h-screen flex justify-center bg-cover items-center" style={{ backgroundImage: `url(${bg})`}}>
       <div className="flex justify-center items-stretch w-3/4">
         <div className="flex flex-col justify-center items-center bg-white p-8 rounded-tl-[10px] rounded-bl-[10px] shadow-md w-1/3">
-          <img src={logo} alt="Logo" className="w-20 h-20 mb-4" />
+          <h1 className='m-10 text-3xl font-semibold'>Admin Login</h1>
           <input type="email" placeholder="Email" value={email} onChange={handleEmailChange} className="w-full p-2 border border-gray-300 rounded mb-4" />
           <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} className="w-full p-2 border border-gray-300 rounded mb-4" />
           <div className="flex justify-between w-full mb-4">
@@ -61,6 +61,7 @@ function LoginPage() {
           {errorMessage && <p className="text-red-500">{errorMessage}</p>}
         </div>
         <div className="flex flex-col justify-center items-center bg-blue-500 p-8 rounded-tr-[10px] rounded-br-[10px] shadow-md w-1/3">
+          <img src={logo} alt="Logo" className="w-[25vh] h-auto mb-4" />
         </div>
       </div>
       {loading && <LoadingAnimation/>}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getDatabase, ref, push, remove, update, onValue } from 'firebase/database';
+import { getDatabase, ref, push, remove, update, get, set, onValue } from 'firebase/database';
 import LoadingAnimation from "../../Components/Loading/LoadingAnimation";
 import Confirmation from "../../Components/PopUps/Confirmation";
 import { getUnixTime, format } from 'date-fns';
@@ -70,6 +70,7 @@ function PendingSubmissions() {
           firstName: submissionData.firstName,
           lastName: submissionData.lastName,
           middleName: submissionData.middleName,
+          address: submissionData.address,
           reason: submissionData.reason,
         };
       case 'pwd':
@@ -113,9 +114,9 @@ function PendingSubmissions() {
       case 'barangay-clearance':
         return `${submissionData.firstName} ${submissionData.lastName}`;
       case 'pwd':
-        return submissionData.contact;
+        return `${submissionData.firstName} ${submissionData.lastName}`;
       case 'senior':
-        return submissionData.firstName;
+        return `${submissionData.firstName} ${submissionData.lastName}`;
       default:
         return 'Unknown Name';
     }
@@ -141,43 +142,48 @@ function PendingSubmissions() {
     if (selectedSubmission) {
       const { category, id, details, date } = selectedSubmission;
   
-      setLoading(true); 
+      setLoading(true);
   
-      const currentDate = getUnixTime(new Date() * 1000);
-      const timeZone = 'Asia/Manila';
-      const zonedDate = utcToZonedTime(currentDate, timeZone);
-      const formatted = format(zonedDate, 'MMMM dd yyyy');
-      setFormattedDate(formatted);
-      console.log(formatted)
+      // Get the current date and format it
+      const currentDate = new Date();
+      const formattedDate = format(currentDate, 'MMMM dd yyyy');
+      setFormattedDate(formattedDate);
+      console.log(formattedDate);
   
       const formDataWithDate = {
         ...details,
-        dateApproved: formatted, 
+        dateApproved: formattedDate,
       };
   
       const database = getDatabase();
       const pendingPath = `submissions/forms/${category}/pending/${id}`;
-      const approvedPath = `submissions/forms/${category}/approved`;
+      const approvedPath = `submissions/forms/${category}/approved/${id}`; // Use the same ID in the approved path
       const psubmissionRef = ref(database, pendingPath);
       const approvedRef = ref(database, approvedPath);
   
       try {
-        await remove(psubmissionRef);
-        const newSubmissionRef = push(approvedRef);
-        await update(newSubmissionRef, formDataWithDate);
-        console.log('Submission moved to approved successfully.');
+        const pendingSnapshot = await get(psubmissionRef); // Get the pending data
+        if (pendingSnapshot.exists()) {
+          const pendingData = pendingSnapshot.val();
+          await set(approvedRef, { ...pendingData, ...formDataWithDate }); // Set the data in the approved path with the same ID
+          await remove(psubmissionRef);
+          console.log('Submission moved to approved successfully.');
+        } else {
+          console.error('Pending submission not found.');
+        }
       } catch (error) {
         console.error('Error moving submission to approved:', error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
   
       setShowPopup(false);
-      setShowDetails(false)
+      setShowDetails(false);
     } else {
       console.error('No selected submission found.');
     }
   };
+  
   
 
   
@@ -280,6 +286,10 @@ function PendingSubmissions() {
                             <div className="grid grid-cols-2">
                               <span className="font-semibold">Last Name:</span>
                               <span className="border border-gray-300 p-1">{selectedSubmission.details.lastName}</span>
+                            </div>
+                            <div className="grid grid-cols-2">
+                              <span className="font-semibold">Address:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.address}</span>
                             </div>
                             <div className="grid grid-cols-2">
                               <span className="font-semibold">Contact:</span>
@@ -393,10 +403,6 @@ function PendingSubmissions() {
                             <div className="grid grid-cols-2">
                               <span className="font-semibold">Address:</span>
                               <span className="border border-gray-300 p-1">{selectedSubmission.details.address}</span>
-                            </div>
-                            <div className="grid grid-cols-2">
-                              <span className="font-semibold">Birth Date:</span>
-                              <span className="border border-gray-300 p-1">{selectedSubmission.details.birthDate}</span>
                             </div>
                             <div className="grid grid-cols-2">
                               <span className="font-semibold">Age:</span>

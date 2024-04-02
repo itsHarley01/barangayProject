@@ -26,16 +26,16 @@ function SideBar({ loggedInAdminName, newAdminName }) {
     <div className="h-screen bg-gradient-to-br from-pink-500 to-blue-500 text-white flex flex-col" style={{ width: '16rem' }}>
       <div className="p-4">
         <div className="flex items-center mb-4">
-          <img src={logo} alt="Logo" className="w-8 h-8 mr-2" />
+          <img src={logo} alt="Logo" className="w-10 h-10 mr-2" />
           <span className="text-lg font-bold">Barangay Guadalupe</span>
         </div>
         <div>
-          <p className="text-sm">Welcome, {adminName} </p>
+          <p className="text-sm">Admin: {adminName} </p>
         </div>
       </div>
       <nav className="flex flex-col space-y-4 flex-1 pt-10">
-        <NavLink to='/admin' className="px-4 py-2 hover:bg-fuchsia-600" activeClassName="bg-gray-700">Dashboard</NavLink>
-        <NavLink to='/admin/manage-users' className="px-4 py-2 hover:bg-fuchsia-600" activeClassName="bg-gray-700">Manage Users</NavLink>
+        <NavLink to='/admin' className="px-4 py-2 hover:bg-fuchsia-600" >Dashboard</NavLink>
+        <NavLink to='/admin/manage-users' className="px-4 py-2 hover:bg-fuchsia-600" >Manage Users</NavLink>
 
         <div className="relative">
           <button onClick={handleDropdownToggle} className={`w-full px-4 py-2 text-left flex gap-2 items-center hover:bg-fuchsia-600 ${showDropdown ? ' ' : ' '}`}>
@@ -54,7 +54,7 @@ function SideBar({ loggedInAdminName, newAdminName }) {
           </div>
         </div>
 
-        <NavLink to='/admin/manage-pages' className="px-4 py-2 hover:bg-fuchsia-600" activeClassName="bg-gray-700">Manage Pages</NavLink>
+        <NavLink to='/admin/manage-pages' className="px-4 py-2 hover:bg-fuchsia-600">Page Settings</NavLink>
       </nav>
       <div className="absolute bottom-0 w-auto p-5">
         <button onClick={() => setShowPopup(true)} className="block w-full bg-red-500 text-center text-white py-2 px-2 rounded hover:bg-red-600">Logout</button>

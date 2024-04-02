@@ -18,6 +18,7 @@ const BarangayClearanceForm = () => {
     firstName: '',
     middleName: '',
     lastName: '',
+    address:'',
     contact: '',
     email: '',
     reason: '',
@@ -120,6 +121,10 @@ const BarangayClearanceForm = () => {
                     Last Name:
                     <input type="text" name="lastName" value={formValues.lastName} onChange={handleInputChange} className="border border-gray-300 rounded-md px-3 py-1 w-full" />
                   </label>
+                  <label className="mb-4">  
+                    Address:
+                    <input type="text" name="address" value={formValues.address} onChange={handleInputChange} className="border border-gray-300 rounded-md px-3 py-1 w-full" />
+                  </label>
                   <label className="mb-4">
                     Contact Number:
                     <input type="text" name="contact" value={formValues.contact} onChange={handleInputChange} className="border border-gray-300 rounded-md px-3 py-1 w-full" />
@@ -136,9 +141,9 @@ const BarangayClearanceForm = () => {
               )}
               {step === 3 && (
                 <div className='flex flex-col'>
-                  <h2 className="text-xl mb-4">Step 3: Reason</h2>
+                  <h2 className="text-xl mb-4">Step 3: Purpose</h2>
                   <label className="mb-2">
-                    Reason:
+                    Purpose:
                     <textarea type="text" name="reason" value={formValues.reason} onChange={handleInputChange} className="border border-gray-300 rounded-md px-3 py-1 w-full" />
                   </label>
 

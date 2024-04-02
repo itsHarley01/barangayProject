@@ -58,7 +58,7 @@ const router = createBrowserRouter([
 // login route
   {path: '/login',element: <LoginLayout />},
 // Admin Route
-  {path: '/admin',element: <AdminLayout />,
+  {path: '/admin',element:<AdminLayout />,
   children: [
        {path:'/admin',element:<DashBoard/>},
 //Admin Manage Users
@@ -93,6 +93,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+      <RouterProvider router={router} />
   </React.StrictMode>
 );
