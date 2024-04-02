@@ -63,13 +63,13 @@ function NewsSlider() {
 
   return (
     <div className="m-8 md:m-8 lg:m-12 xl:m-40 ">
-      <div className="pl-10 w-full text-left font-semibold text-4xl font-sans border-b pb-2">
+      <div className="pl-10 w-full text-left font-semibold text-4xl font-sans border-b pb-2"> 
         Get Updated with the news!
       </div>
       <Slider {...settings}>
         {newsData.map((news) => (
-          <div key={news.id} className="justify-center">
-            <div className="bg-white  overflow-hidden">
+          <div key={news.id}>
+            <div className="bg-white overflow-hidden">
               <NewsCard
                 image={news.image}
                 headerText={news.title}
