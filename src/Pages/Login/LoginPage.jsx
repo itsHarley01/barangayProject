@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { getDatabase, ref, get, child } from 'firebase/database';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../AuthContext/auth';
 import bg from '../../assets/Images/bgbb.png';
 import logo from '../../assets/Images/logo.png';
+import { useNavigate } from 'react-router-dom';
 import LoadingAnimation from '../../Components/Loading/LoadingAnimation';
 
 function LoginPage() {
+  const useNav = useNavigate();
+
+  const { loginWithEmail, getIsLoggedIn } = useAuth(); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  const loggedIn = getIsLoggedIn();
+
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -21,24 +27,18 @@ function LoginPage() {
 
   const handleLogin = async () => {
     try {
+      setLoading(true);
       if (!email || !password) {
         setErrorMessage('Please enter both email and password.');
         return;
       }
-
-      setLoading(true);
-      const auth = getAuth();
-      await signInWithEmailAndPassword(auth, email, password);
-
-      const database = getDatabase();
-      const adminRef = ref(database, 'admins');
-      const adminSnapshot = await get(child(adminRef, auth.currentUser.uid));
-
-      if (adminSnapshot.exists()) {
-        const adminData = adminSnapshot.val();
-        window.location.href = `/admin`;
+      await loginWithEmail(email, password);
+      const loggedIn = getIsLoggedIn();
+      console.log('LoggedIn after login:', loggedIn); 
+      if (loggedIn) {
+        useNav('/admin');
       } else {
-        setErrorMessage('Email or password is incorrect.');
+        setErrorMessage('Login failed.'); // Optionally, handle failed login here
       }
     } catch (error) {
       setErrorMessage('Email or password is incorrect.');
@@ -47,6 +47,7 @@ function LoginPage() {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen flex justify-center bg-cover items-center" style={{ backgroundImage: `url(${bg})`}}>
@@ -70,4 +71,3 @@ function LoginPage() {
 }
 
 export default LoginPage;
-

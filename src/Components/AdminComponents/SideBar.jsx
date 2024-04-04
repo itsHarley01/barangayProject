@@ -4,8 +4,7 @@ import logo from '../../assets/Images/logo.png';
 import Confirmation from '../PopUps/Confirmation';
 import { RiArrowDownSFill, RiArrowUpSFill } from 'react-icons/ri';
 
-function SideBar({ loggedInAdminName, newAdminName }) {
-  const adminName = newAdminName || loggedInAdminName;
+function SideBar() {
   const [showPopup, setShowPopup] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -30,7 +29,7 @@ function SideBar({ loggedInAdminName, newAdminName }) {
           <span className="text-lg font-bold">Barangay Guadalupe</span>
         </div>
         <div>
-          <p className="text-sm">Admin: {adminName} </p>
+          <p className="text-sm">Admin: {} </p>
         </div>
       </div>
       <nav className="flex flex-col space-y-4 flex-1 pt-10">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './CSS/index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -34,65 +34,69 @@ import ManageNews from './Pages/AdminPage/manage-pages/ManageNews';
 import CreateNews from './Components/AdminComponents/ManageNews/CreateNews';
 import ApprovedSubmissions from './Pages/AdminPage/ApprovedSubmissions';
 import Complaints from './Pages/AdminPage/Complaints';
+import { useAuth } from './AuthContext/auth';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <MainLayout />,
-    errorElement: <PageNotFound />,
-    children: [
-      {path: '/', element: <Home />,},
-      {path: '/about',element: <About />,},
-      {path: '/services',element: <Services />},
-      {path: '/contact',element: <Contact />},
-      {path: '/privacy-policy',element: <PrivacyPolicy />},
-      {path: '/faq',element: <Faq />},
-      {path: '/download',element: <DownloadApp />},
-      {path: '/news',element: <News />},
-      {path: '/barangay-clearance',element: <BarangayClearanceForm />},
-      {path: '/pwd-application',element: <PwdApplicationForm />},
-      {path: '/senior-citizen-application',element: <SeniorCitizenApplicationForm />},
-      {path: '/complaints',element: <ComplaintsForm />},
-    ],
-  },
-// login route
-  {path: '/login',element: <LoginLayout />},
-// Admin Route
-  {path: '/admin',element:<AdminLayout />,
-  children: [
-       {path:'/admin',element:<DashBoard/>},
-//Admin Manage Users
-       {path:'/admin/manage-users',element:<ManageUsers/>,
-        children:[
-          {path:'/admin/manage-users',element:<Users />},
-          {path:'/admin/manage-users/admins',element:<Admins />},
-        ]
-       },
-//Admin manage pages
-       {
-        path:'/admin/manage-pages',
-        element:<ManagePages/>,
-        children:[
-          {path:'/admin/manage-pages',element:<General />},
-          {path:'/admin/manage-pages/officials',element:<Officials />},
-          {path:'/admin/manage-pages/news',element:<ManageNews />},
-          {path:'/admin/manage-pages/faq',element:<ManageFaq />},
-        ]
-       },
-//admin manage submissions
-       {path:'/admin/submissions/pending',element:<PendingSubmissions />,},
-       {path:'/admin/submissions/approved',element:<ApprovedSubmissions />},
-       {path:'/admin/submissions/complaints',element:<Complaints />},
-//  Super Admin / Admin
-       {path:'/admin/add-new-admin',element:<CreateAdmin />},
-       {path:'/admin/manage-pages/add-official',element:<AddOfficial />},
-       {path:'/admin/manage-pages/create-news',element:<CreateNews />},
-    ],
-  }
-]);
+function App() {
+  const { getIsLoggedIn } = useAuth();
+  const isLoggedIn = getIsLoggedIn();
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-      <RouterProvider router={router} />
-  </React.StrictMode>
-);
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <MainLayout />,
+      errorElement: <PageNotFound />,
+      children: [
+        { path: '/', element: <Home /> },
+        { path: '/about', element: <About /> },
+        { path: '/services', element: <Services /> },
+        { path: '/contact', element: <Contact /> },
+        { path: '/privacy-policy', element: <PrivacyPolicy /> },
+        { path: '/faq', element: <Faq /> },
+        { path: '/download', element: <DownloadApp /> },
+        { path: '/news', element: <News /> },
+        { path: '/barangay-clearance', element: <BarangayClearanceForm /> },
+        { path: '/pwd-application', element: <PwdApplicationForm /> },
+        { path: '/senior-citizen-application', element: <SeniorCitizenApplicationForm /> },
+        { path: '/complaints', element: <ComplaintsForm /> },
+      ],
+    },
+    { path: '/login', element: <LoginLayout /> },
+    {
+      path: '/admin',
+      //element: isLoggedIn ? <AdminLayout /> : <PageNotFoundAdmin />,
+      element:<AdminLayout />,
+      children: [
+        { path:'/admin', element:<DashBoard/> },
+        { path:'/admin/manage-users', element:<ManageUsers/>, children:[
+            { path:'/admin/manage-users', element:<Users /> },
+            { path:'/admin/manage-users/admins', element:<Admins /> },
+          ]
+        },
+        {
+          path:'/admin/manage-pages',
+          element:<ManagePages/>,
+          children:[
+            { path:'/admin/manage-pages', element:<General /> },
+            { path:'/admin/manage-pages/officials', element:<Officials /> },
+            { path:'/admin/manage-pages/news', element:<ManageNews /> },
+            { path:'/admin/manage-pages/faq', element:<ManageFaq /> },
+          ]
+        },
+        { path:'/admin/submissions/pending', element:<PendingSubmissions /> },
+        { path:'/admin/submissions/approved', element:<ApprovedSubmissions /> },
+        { path:'/admin/submissions/complaints', element:<Complaints /> },
+        { path:'/admin/add-new-admin', element:<CreateAdmin /> },
+        { path:'/admin/manage-pages/add-official', element:<AddOfficial /> },
+        { path:'/admin/manage-pages/create-news', element:<CreateNews /> },
+      ],
+    },
+  ]);
+
+  return (
+    <React.StrictMode>
+      <RouterProvider router={router}/>
+    </React.StrictMode>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);

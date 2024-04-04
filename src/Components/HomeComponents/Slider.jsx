@@ -1,82 +1,67 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../../Firebase/Firebase';
 import { onValue, ref } from 'firebase/database';
-import NewsCard from '../../Components/NewsCard';
+import NewsCard from '../NewsCard';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
 function NewsSlider() {
+  const NextArrow = ({ onClick }) => {
+    return (
+      <div className="absolute top-0 right-0 flex items-center h-full" onClick={onClick}>
+        <FaArrowRight />
+      </div>
+    );
+  };
+
+  const PrevArrow = ({ onClick }) => {
+    return (
+      <div className="absolute top-0 left-0 flex items-center h-full z-50" onClick={onClick}>
+        <FaArrowLeft />
+      </div>
+    );
+  };
   const [newsData, setNewsData] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [newsIndex, setNewsIndex] = useState(0);
 
   useEffect(() => {
-    const newsRef = ref(db, 'page-info/news');
-
+    const newsRef = ref(db, '/page-info/news');
     onValue(newsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const newsArray = Object.keys(data).map((key) => ({
-          id: key,
-          ...data[key],
-        }));
+        const newsArray = Object.values(data); 
         setNewsData(newsArray);
       }
     });
-
-    return () => {
-      // Clean up event listener
-      // This is optional if you're using onValue as it handles cleanup internally
-    };
   }, []);
 
-  const prevSlide = () => {
-    const newIndex = (currentIndex - 1 + newsData.length) % newsData.length;
-    setCurrentIndex(newIndex);
-  };
-
-  const nextSlide = () => {
-    const newIndex = (currentIndex + 1) % newsData.length;
-    setCurrentIndex(newIndex);
-  };
-
-  const goToSlide = (slideIndex) => {
-    setCurrentIndex(slideIndex);
-  };
-
-  useEffect(() => {
-    const interval = setInterval(nextSlide, 3000);
-    return () => clearInterval(interval);
-  }, [currentIndex]);
-
   const settings = {
-    dots: true,
     infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    arrows: false,
-    beforeChange: (current, next) => setCurrentIndex(next),
+    lazyLoad: true,
+    speed: 300,
+    slidesToShow: 3,
+    dots:true,
+    centerMode: true,
+    centerPadding: 0,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+    beforeChange: (current, next) => setNewsIndex(next),  
   };
 
   return (
-    <div className="m-8 md:m-8 lg:m-12 xl:m-40 ">
-      <div className="pl-10 w-full text-left font-semibold text-4xl font-sans border-b pb-2"> 
-        Get Updated with the news!
-      </div>
+    <div className="m-20 h-full"  >
+      <h1 className='w-full text-center text-4xl mb-20 font-semibold'>Get Updated with the Barangay</h1>
       <Slider {...settings}>
-        {newsData.map((news) => (
-          <div key={news.id}>
-            <div className="bg-white overflow-hidden">
-              <NewsCard
-                image={news.image}
-                headerText={news.title}
-                description={news.description}
-                date={news.datePublished}
-              />
-            </div>
+        {newsData.map((newsItem, idx) => (
+          <div key={idx} className={idx === newsIndex ? "transform scale-100 opacity-100 h-full" : " justify-center transform scale-50 opacity-50"}>
+            <NewsCard 
+              image={newsItem.image}
+              headerText={newsItem.title}
+              description={newsItem.description}
+              date={newsItem.datePublished}
+            />
           </div>
         ))}
       </Slider>
