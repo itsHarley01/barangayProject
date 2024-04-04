@@ -55,7 +55,7 @@ function NewsSlider() {
       <h1 className='w-full text-center text-4xl mb-20 font-semibold'>Get Updated with the Barangay</h1>
       <Slider {...settings}>
         {newsData.map((newsItem, idx) => (
-          <div key={idx} className={idx === newsIndex ? "transform scale-100 opacity-100 h-full" : " justify-center transform scale-50 opacity-50"}>
+          <div key={idx} className={idx === newsIndex ? "transform scale-100 opacity-100 transition-transform duration-300" : "justify-center transform scale-50 opacity-50 transition-transform duration-300"}>
             <NewsCard 
               image={newsItem.image}
               headerText={newsItem.title}
