@@ -3,7 +3,7 @@ import { db } from "../../Firebase/Firebase";
 import { onValue, ref } from "firebase/database";
 import StaticNavBar from "../../Components/Navigation/StaticNavBar";
 import HeroP from "../../Components/HeroP";
-import NewsCard from "../../Components/NewsCard";
+import NewsCardNews from "../../Components/NewsCardNews";
 import LoadingAnimation from "../../Components/Loading/LoadingAnimation";
 
 function News() {
@@ -38,7 +38,7 @@ function News() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 m-10 p-5">
         {newsData.map((news) => (
-          <NewsCard
+          <NewsCardNews
             key={news.id}
             image={news.image}
             headerText={news.title}
