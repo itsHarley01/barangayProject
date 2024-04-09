@@ -73,10 +73,10 @@ const CreateNewAdmin = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg w-1/2 shadow-md mt-10">
+    <div className="bg-white border p-10 rounded-lg shadow-md mt-10 ">
       <h1 className="text-2xl font-bold mb-4">Create Admin</h1>
 
-      <form onSubmit={handleFormSubmit}>
+      <form  onSubmit={handleFormSubmit}>
       <div className='flex gap-4 '>
           <div className="mb-4">
             <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
@@ -86,7 +86,7 @@ const CreateNewAdmin = () => {
               name="firstName"
               value={firstName}
               onChange={handleFirstNameChange}
-              className="mt-1 px-2 bg-blue-300 w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               required
             />
           </div>
@@ -98,7 +98,7 @@ const CreateNewAdmin = () => {
               name="middleName"
               value={middleName}
               onChange={handleMiddleNameChange}
-              className="mt-1 px-2 bg-blue-300 w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
           <div className="mb-4">
@@ -109,7 +109,7 @@ const CreateNewAdmin = () => {
             name="lastName"
             value={lastName}
             onChange={handleLastNameChange}
-            className="mt-1 px-2 bg-blue-300 w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             required
           />
         </div>
@@ -122,7 +122,7 @@ const CreateNewAdmin = () => {
             name="phoneNumber"
             value={phoneNumber}
             onChange={handlePhoneNumberChange}
-            className="mt-1 px-2 bg-blue-300 w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           ></input>
         </div>
         <div className="mb-4">
@@ -133,7 +133,7 @@ const CreateNewAdmin = () => {
             name="email"
             value={email}
             onChange={handleEmailChange}
-            className="mt-1 px-2 bg-blue-300 w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             required
           />
         </div>
@@ -145,7 +145,7 @@ const CreateNewAdmin = () => {
             name="password"
             value={password}
             onChange={handlePasswordChange}
-            className="mt-1 px-2 bg-blue-300 w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             required
           />
         </div>

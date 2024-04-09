@@ -1,8 +1,8 @@
-import { useAuth } from '../../AuthContext/auth';
-import{Link} from 'react-router-dom'
+
+import{Link, useNavigate} from 'react-router-dom'
 
 function PageNotFoundAdmin(){
-    const { getIsLoggedIn } = useAuth();
+    const usenav = useNavigate()
 
 
     return(

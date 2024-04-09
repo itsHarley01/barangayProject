@@ -36,7 +36,7 @@ function News() {
       <StaticNavBar />
       <HeroP text="Latest News" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 m-10 p-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 m-20 p-10">
         {newsData.map((news) => (
           <NewsCardNews
             key={news.id}

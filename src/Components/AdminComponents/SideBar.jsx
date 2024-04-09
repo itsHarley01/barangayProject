@@ -3,18 +3,34 @@ import { NavLink } from 'react-router-dom';
 import logo from '../../assets/Images/logo.png';
 import Confirmation from '../PopUps/Confirmation';
 import { RiArrowDownSFill, RiArrowUpSFill } from 'react-icons/ri';
+import { useAuthContext } from '../../AuthContext/AuthContext';
+import { useNavigate } from "react-router-dom";
 
 function SideBar() {
+  const navigate = useNavigate()
+
+  const { user, userData, userLogout } = useAuthContext();
+  const firstName = userData ? userData.firstName : '';
+  const lastName = userData ? userData.lastName : '';
+
   const [showPopup, setShowPopup] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const handleConfirm = () => {
+  // console.log(userData)
+
+  const handleConfirm = async () => {
     setShowPopup(false);
-    window.location.href = '/login';
+    try {
+      await userLogout();
+      navigate("/login");
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const handleCancel = () => {
     setShowPopup(false);
+    console.log(user.uid)
   };
 
   const handleDropdownToggle = () => {
@@ -29,7 +45,7 @@ function SideBar() {
           <span className="text-lg font-bold">Barangay Guadalupe</span>
         </div>
         <div>
-          <p className="text-sm">Admin: {} </p>
+          <p className="text-sm">Admin: {user && `${firstName} ${lastName}`} </p>
         </div>
       </div>
       <nav className="flex flex-col space-y-4 flex-1 pt-10">

@@ -34,11 +34,11 @@ import ManageNews from './Pages/AdminPage/manage-pages/ManageNews';
 import CreateNews from './Components/AdminComponents/ManageNews/CreateNews';
 import ApprovedSubmissions from './Pages/AdminPage/ApprovedSubmissions';
 import Complaints from './Pages/AdminPage/Complaints';
-import { useAuth } from './AuthContext/auth';
+import LoginPage from './Pages/Login/LoginPage';
+import { AuthProvider } from './AuthContext/AuthContext';
+import ProtectedRoute from './AuthContext/ProtectedRoute';
 
 function App() {
-  const { getIsLoggedIn } = useAuth();
-  const isLoggedIn = getIsLoggedIn();
 
   const router = createBrowserRouter([
     {
@@ -60,11 +60,10 @@ function App() {
         { path: '/complaints', element: <ComplaintsForm /> },
       ],
     },
-    { path: '/login', element: <LoginLayout /> },
+    { path: '/login', element: <LoginPage/> },
     {
       path: '/admin',
-      //element: isLoggedIn ? <AdminLayout /> : <PageNotFoundAdmin />,
-      element:<AdminLayout />,
+      element:<ProtectedRoute> <AdminLayout /> </ProtectedRoute>,
       children: [
         { path:'/admin', element:<DashBoard/> },
         { path:'/admin/manage-users', element:<ManageUsers/>, children:[
@@ -94,7 +93,9 @@ function App() {
 
   return (
     <React.StrictMode>
-      <RouterProvider router={router}/>
+      <AuthProvider>
+        <RouterProvider router={router}/>
+      </AuthProvider>
     </React.StrictMode>
   );
 }
