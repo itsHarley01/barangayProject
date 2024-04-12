@@ -1,74 +1,26 @@
-
 import { useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getDatabase, ref, set } from 'firebase/database';
-import { db } from '../../../Firebase/Firebase';
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../../../AuthContext/AuthContext';
 import LoadingAnimation from '../../Loading/LoadingAnimation';
 
 const CreateNewAdmin = () => {
-  const [loading, setLoading] = useState(false); 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [middleName, setMiddleName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleLastNameChange = (e) => {
-    setLastName(e.target.value);
-  };
-
-  const handleFirstNameChange = (e) => {
-    setFirstName(e.target.value);
-  };
-
-  const handleMiddleNameChange = (e) => {
-    setMiddleName(e.target.value);
-  };
-
-  const handlePhoneNumberChange = (e) => {
-    setPhoneNumber(e.target.value);
-  };
+  const { createNewAdmin, newAdminDetails, setNewAdminDetails } = useAuthContext();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const auth = getAuth();
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-
-      const database = getDatabase();
-      await set(ref(database, `admins/${userCredential.user.uid}`), {
-        email: email,
-        lastName: lastName,
-        firstName: firstName,
-        middleName: middleName,
-        phoneNumber: phoneNumber,
-      });
-
-      console.log('Admin created:', userCredential.user);
-      setEmail('');
-      setPassword('');
-      setLastName('');
-      setFirstName('');
-      setMiddleName('');
-      setPhoneNumber('');
-
-      window.location.href = '/admin/manage-users/admins';
+      await createNewAdmin(newAdminDetails.email, newAdminDetails.password, newAdminDetails);
+      console.log('Admin created successfully');
+      navigate('/admin/manage-users/admins');
     } catch (error) {
-      alert(error.message);
       console.error('Error creating admin:', error.message);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -76,16 +28,16 @@ const CreateNewAdmin = () => {
     <div className="bg-white border p-10 rounded-lg shadow-md mt-10 ">
       <h1 className="text-2xl font-bold mb-4">Create Admin</h1>
 
-      <form  onSubmit={handleFormSubmit}>
-      <div className='flex gap-4 '>
+      <form onSubmit={handleFormSubmit}>
+        <div className='flex gap-4 '>
           <div className="mb-4">
             <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
             <input
               type="text"
               id="firstName"
               name="firstName"
-              value={firstName}
-              onChange={handleFirstNameChange}
+              value={newAdminDetails.firstName}
+              onChange={(e) => setNewAdminDetails({ ...newAdminDetails, firstName: e.target.value })}
               className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               required
             />
@@ -96,23 +48,23 @@ const CreateNewAdmin = () => {
               type="text"
               id="middleName"
               name="middleName"
-              value={middleName}
-              onChange={handleMiddleNameChange}
+              value={newAdminDetails.middleName}
+              onChange={(e) => setNewAdminDetails({ ...newAdminDetails, middleName: e.target.value })}
               className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
           <div className="mb-4">
-          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={lastName}
-            onChange={handleLastNameChange}
-            className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            required
-          />
-        </div>
+            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={newAdminDetails.lastName}
+              onChange={(e) => setNewAdminDetails({ ...newAdminDetails, lastName: e.target.value })}
+              className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              required
+            />
+          </div>
         </div>
         <div className="mb-4">
           <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">Phone Number</label>
@@ -120,8 +72,8 @@ const CreateNewAdmin = () => {
             type="tel"
             id="phoneNumber"
             name="phoneNumber"
-            value={phoneNumber}
-            onChange={handlePhoneNumberChange}
+            value={newAdminDetails.phoneNumber}
+            onChange={(e) => setNewAdminDetails({ ...newAdminDetails, phoneNumber: e.target.value })}
             className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           ></input>
         </div>
@@ -131,8 +83,8 @@ const CreateNewAdmin = () => {
             type="email"
             id="email"
             name="email"
-            value={email}
-            onChange={handleEmailChange}
+            value={newAdminDetails.email}
+            onChange={(e) => setNewAdminDetails({ ...newAdminDetails, email: e.target.value })}
             className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             required
           />
@@ -143,8 +95,8 @@ const CreateNewAdmin = () => {
             type="password"
             id="password"
             name="password"
-            value={password}
-            onChange={handlePasswordChange}
+            value={newAdminDetails.password}
+            onChange={(e) => setNewAdminDetails({ ...newAdminDetails, password: e.target.value })}
             className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             required
           />
@@ -159,7 +111,7 @@ const CreateNewAdmin = () => {
         </button>
       </form>
 
-      {loading && <LoadingAnimation/>}
+      {loading && <LoadingAnimation />}
     </div>
   );
 };

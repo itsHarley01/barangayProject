@@ -4,6 +4,7 @@ import LoadingAnimation from "../../Components/Loading/LoadingAnimation";
 import Confirmation from "../../Components/PopUps/Confirmation";
 import { getUnixTime, format } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
+import emailjs from '@emailjs/browser';
 
 function PendingSubmissions() {
   // State variables
@@ -53,6 +54,7 @@ function PendingSubmissions() {
         setSubmissions(filteredSubmissions);
       } else {
         console.log('No data found for submissions.');
+        setLoading(false);
       }
     });
   };
@@ -139,12 +141,12 @@ function PendingSubmissions() {
   };
 
   const handleConfirm = async () => {
+    setLoading(true)
     if (selectedSubmission) {
       const { category, id, details, date } = selectedSubmission;
   
       setLoading(true);
-  
-      // Get the current date and format it
+
       const currentDate = new Date();
       const formattedDate = format(currentDate, 'MMMM dd yyyy');
       setFormattedDate(formattedDate);
@@ -157,22 +159,28 @@ function PendingSubmissions() {
   
       const database = getDatabase();
       const pendingPath = `submissions/forms/${category}/pending/${id}`;
-      const approvedPath = `submissions/forms/${category}/approved/${id}`; // Use the same ID in the approved path
+      const approvedPath = `submissions/forms/${category}/approved/${id}`; 
       const psubmissionRef = ref(database, pendingPath);
       const approvedRef = ref(database, approvedPath);
   
       try {
-        const pendingSnapshot = await get(psubmissionRef); // Get the pending data
+        const pendingSnapshot = await get(psubmissionRef); 
         if (pendingSnapshot.exists()) {
           const pendingData = pendingSnapshot.val();
-          await set(approvedRef, { ...pendingData, ...formDataWithDate }); // Set the data in the approved path with the same ID
+          await set(approvedRef, { ...pendingData, ...formDataWithDate });
           await remove(psubmissionRef);
           console.log('Submission moved to approved successfully.');
+
+          await sendEmail({ ...selectedSubmission.details, dateApproved: formattedDate, category:category });
+          console.log('Email sent after form approval.');
+          setLoading(false)
         } else {
           console.error('Pending submission not found.');
+          setLoading(false)
         }
       } catch (error) {
         console.error('Error moving submission to approved:', error);
+        setLoading(false)
       } finally {
         setLoading(false);
       }
@@ -181,8 +189,34 @@ function PendingSubmissions() {
       setShowDetails(false);
     } else {
       console.error('No selected submission found.');
+      setLoading(false)
     }
   };
+
+const sendEmail = async (formData) => {
+  try {
+    const templateParams = {
+      to_email: formData.email, 
+      category: getCategoryName(formData.category), 
+      dateApproved: formData.dateApproved, 
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+    };
+
+    const response = await emailjs.send(
+      'service_v7dp4yg',
+      'template_81jzmx4',
+      templateParams,
+      'AGpI6zeuhFsu1Ok5t'
+    );
+
+    console.log('Email sent:', response);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+};
+
+  
   
   
 

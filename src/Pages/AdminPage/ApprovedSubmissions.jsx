@@ -49,6 +49,7 @@ function ApprovedSubmissions() {
         setSubmissions(filteredSubmissions);
       } else {
         console.log('No data found for submissions.');
+        setLoading(false);
       }
     });
   };

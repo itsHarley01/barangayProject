@@ -6,7 +6,6 @@ import { NavLink } from 'react-router-dom';
 
 function Admins() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('date');
   const [admins, setAdmins] = useState([]);
   const [editAdmin, setEditAdmin] = useState(null);
   const [deleteAdmin, setDeleteAdmin] = useState(null); 
@@ -41,12 +40,19 @@ function Admins() {
   }, []);
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+    const searchValue = e.target.value.toLowerCase();
+    setSearchTerm(searchValue);
   };
 
-  const handleSortChange = (e) => {
-    setSortBy(e.target.value);
-  };
+  const filteredAdmins = admins.filter((admin) =>
+  (admin.role === 'admin') &&
+  (admin.firstName.toLowerCase().includes(searchTerm) ||
+  admin.middleName.toLowerCase().includes(searchTerm) ||
+  admin.lastName.toLowerCase().includes(searchTerm) ||
+  admin.phoneNumber.toLowerCase().includes(searchTerm) ||
+  admin.email.toLowerCase().includes(searchTerm))
+);
+
 
   const handleEditAdmin = (admin) => {
     setEditAdmin(admin); 
@@ -101,7 +107,7 @@ function Admins() {
 
   return (
     <div>
-      <div className="flex items-center mt-10 mb-4">
+      <div className="flex items-center mt-10 mb-4 justify-between">
         <input
           type="text"
           placeholder="Search Admins..."
@@ -109,15 +115,8 @@ function Admins() {
           onChange={handleSearchChange}
           className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
-        <select
-          value={sortBy}
-          onChange={handleSortChange}
-          className="ml-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-        >
-          <option value="date">Sort by Date</option>
-          <option value="alphabetical">Sort A-Z</option>
-        </select>
-        <NavLink to='/admin/add-new-admin'  className="px-3 py-2 bg-gradient-to-r from-pink-500 to-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ml-[calc(100%/1/1.9)]">
+
+        <NavLink to='/admin/add-new-admin'  className="px-3 py-2 bg-gradient-to-r from-pink-500 to-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
           Create New Admin
         </NavLink>
       </div>
@@ -129,7 +128,7 @@ function Admins() {
             <th>Email</th>
             <th>Actions</th>
           </tr>
-          {admins.map((admin) => (
+          {filteredAdmins.map((admin) => (
             <tr key={admin.id}>
               <td>{`${admin.firstName} ${admin.middleName} ${admin.lastName}`}</td>
               <td>{admin.phoneNumber}</td>

@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import logo from '../../assets/Images/logo.png';
 import { FaBars } from 'react-icons/fa'; // Import the burger icon
 
 function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false); // State for managing dropdown visibility
-  const dropdownRef = useRef(null); // Ref for dropdown menu
+  const [showDropdown, setShowDropdown] = useState(false); 
+  const dropdownRef = useRef(null); 
+  const location = useLocation();
+  const [activeLink, setActiveLink] = useState('');
+
+  useEffect(() => {
+    setActiveLink(location.pathname);
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,12 +42,12 @@ function NavBar() {
           <FaBars className="text-xl md:hidden cursor-pointer right-0 justify-center" onClick={toggleDropdown} />
             {/* Conditional rendering of navLinks */}
           <div className="hidden md:flex right-0 gap-10">
-            <NavLink className="relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left" to='/'>Home</NavLink>
-            <NavLink className="relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left" to='/about'>About</NavLink>
-            <NavLink className="relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left" to='/services'>Services</NavLink>
-            <NavLink className="relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left" to='/contact'>Contact</NavLink>
-            <NavLink className="relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left" to='/news'>News</NavLink>
-            <NavLink className="relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left" to='/faq'>FAQ</NavLink>
+            <NavLink className={`relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left ${activeLink === '/' ? 'after:scale-x-100 after:bg-pink-500' : ''}`} to='/' >Home</NavLink>
+            <NavLink className={`relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left ${activeLink === '/about' ? 'after:scale-x-100 after:bg-pink-500' : ''}`} to='/about'>About</NavLink>
+            <NavLink className={`relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left ${activeLink === '/services' ? 'after:scale-x-100 after:bg-pink-500' : ''}`} to='/services'>Services</NavLink>
+            <NavLink className={`relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left ${activeLink === '/contact' ? 'after:scale-x-100 after:bg-pink-500' : ''}`} to='/contact'>Contact</NavLink>
+            <NavLink className={`relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left ${activeLink === '/news' ? 'after:scale-x-100 after:bg-pink-500' : ''}`} to='/news'>News</NavLink>
+            <NavLink className={`relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left ${activeLink === '/faq' ? 'after:scale-x-100 after:bg-pink-500' : ''}`} to='/faq'>FAQ</NavLink>
           </div>
         </div>
         
@@ -49,12 +55,12 @@ function NavBar() {
 
       {/* Dropdown menu */}
       <div ref={dropdownRef} className={`md:hidden flex flex-col right-0 border-t border-gray-200 z-50 ${showDropdown ? 'block' : 'hidden'}`}>
-        <NavLink className=" text-center ml-auto my-2 relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left" to='/'>Home</NavLink>
-        <NavLink className=" text-center ml-auto my-2 relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left" to='/about'>About</NavLink>
-        <NavLink className=" text-center ml-auto my-2 relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left" to='/services'>Services</NavLink>
-        <NavLink className=" text-center ml-auto my-2 relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left" to='/contact'>Contact</NavLink>
-        <NavLink className=" text-center ml-auto my-2 relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left" to='/news'>News</NavLink>
-        <NavLink className=" text-center ml-auto my-2 relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left" to='/faq'>FAQ</NavLink>
+        <NavLink className={` text-center ml-auto my-2 relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left ${activeLink === '/' ? 'after:scale-x-100 after:bg-pink-500' : ''} `} to='/'>Home</NavLink>
+        <NavLink className={` text-center ml-auto my-2 relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left ${activeLink === '/about' ? 'after:scale-x-100 after:bg-pink-500' : ''} `} to='/about'>About</NavLink>
+        <NavLink className={` text-center ml-auto my-2 relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left ${activeLink === '/services' ? 'after:scale-x-100 after:bg-pink-500' : ''} `} to='/services'>Services</NavLink>
+        <NavLink className={` text-center ml-auto my-2 relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left ${activeLink === '/contact' ? 'after:scale-x-100 after:bg-pink-500' : ''} `} to='/contact'>Contact</NavLink>
+        <NavLink className={` text-center ml-auto my-2 relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left ${activeLink === '/news' ? 'after:scale-x-100 after:bg-pink-500' : ''} `} to='/news'>News</NavLink>
+        <NavLink className={` text-center ml-auto my-2 relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-pink-500 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left ${activeLink === '/faq' ? 'after:scale-x-100 after:bg-pink-500' : ''} `} to='/faq'>FAQ</NavLink>
       </div>
         
 

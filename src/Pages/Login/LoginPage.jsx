@@ -15,13 +15,16 @@ const LoginPage = () => {
 
 
   const handleLogin = async (e) => {
+    setLoading(true)
     e.preventDefault();
     setError("");
     try {
       await userLogin(email, password);
       navigate("/admin");
+      setLoading(false)
     } catch (err) {
       setError(err.message);
+      setLoading(false)
     }
 
   };

@@ -5,7 +5,6 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 
 function Users() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('date');
   const [users, setUsers] = useState([]);
   const [editUser, setEditUser] = useState(null);
   const [deleteUser, setDeleteUser] = useState(null);
@@ -41,12 +40,17 @@ function Users() {
   }, []);
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+    const searchValue = e.target.value.toLowerCase();
+    setSearchTerm(searchValue);
   };
 
-  const handleSortChange = (e) => {
-    setSortBy(e.target.value);
-  };
+  const filteredUsers = users.filter((user) =>
+    user.firstName.toLowerCase().includes(searchTerm) ||
+    user.middleName.toLowerCase().includes(searchTerm) ||
+    user.contact.toLowerCase().includes(searchTerm) ||
+    user.email.toLowerCase().includes(searchTerm)
+  );
+
 
   const handleEditUser = (user) => {
     setEditUser(user);
@@ -111,19 +115,12 @@ function Users() {
           onChange={handleSearchChange}
           className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
-        <select
-          value={sortBy}
-          onChange={handleSortChange}
-          className="ml-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-        >
-          <option value="date">Sort by Date</option>
-          <option value="alphabetical">Sort A-Z</option>
-        </select>
+
       </div>
       <div className="border border-gray-300 rounded-md p-4">
         <table className="w-full">
           <thead>
-            <tr>
+            <tr className='border-b text-left'>
               <th>Name</th>
               <th>Contact</th>
               <th>Email</th>
@@ -131,7 +128,7 @@ function Users() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {filteredUsers.map((user) => (
               <tr key={user.id}>
                 <td>{`${user.firstName} ${user.middleName} ${user.lastName}`}</td>
                 <td>{user.contact}</td>

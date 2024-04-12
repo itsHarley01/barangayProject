@@ -38,21 +38,25 @@ function Dashboard() {
         'pwd': ['pending', 'approved'],
         'senior': ['pending', 'approved'],
       };
-
-      const promises = [];
+  
+      const submissionPromises = [];
+      const userPromise = get(dbref(db, 'users/')).then((snapshot) =>
+        snapshot.exists() ? Object.keys(snapshot.val()).length : 0
+      );
+  
       const dates = [];
-
+  
       for (const type of Object.keys(submissionPaths)) {
         for (const status of submissionPaths[type]) {
           const refPath = `submissions/forms/${type}/${status}/`;
           const submissionRef = dbref(db, refPath);
-          promises.push(
+          submissionPromises.push(
             get(submissionRef).then((snapshot) => {
               if (snapshot.exists()) {
                 const submissionsData = snapshot.val();
-                Object.values(submissionsData).forEach(submission => dates.push(submission.dateSubmitted));
+                Object.values(submissionsData).forEach((submission) => dates.push(submission.dateSubmitted));
                 // Merge new submissions data with existing data
-                setSubmissions(prevState => ({ ...prevState, ...submissionsData }));
+                setSubmissions((prevState) => ({ ...prevState, ...submissionsData }));
                 return Object.keys(submissionsData).length;
               }
               return 0;
@@ -60,74 +64,59 @@ function Dashboard() {
           );
         }
       }
-
+  
       const complaintsRef = dbref(db, 'submissions/forms/complaints/');
-      promises.push(
-        get(complaintsRef).then((snapshot) => {
-          if (snapshot.exists()) {
-            const complaintsData = snapshot.val();
-            Object.values(complaintsData).forEach(submission => dates.push(submission.dateSubmitted));
-            // Merge new complaints data with existing data
-            setSubmissions(prevState => ({ ...prevState, ...complaintsData }));
-            return Object.keys(complaintsData).length;
-          }
-          return 0;
-        })
+      const complaintsPromise = get(complaintsRef).then((snapshot) =>
+        snapshot.exists() ? Object.keys(snapshot.val()).length : 0
       );
-
-      const usersRef = dbref(db, 'users/');
-      promises.push(get(usersRef).then((snapshot) => snapshot.exists() ? Object.keys(snapshot.val()).length : 0));
-
-      const results = await Promise.all(promises);
-
+  
+      const results = await Promise.all(submissionPromises.concat(complaintsPromise, userPromise));
+  
       const newData = {};
       let index = 0;
-
-      dates.forEach(date => {
+  
+      dates.forEach((date) => {
         // Convert the date string to a Date object
         const formattedDate = new Date(date);
-        
+  
         // Extract the month, day, and year components from the Date object
         const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are zero-based
         const day = formattedDate.getDate().toString().padStart(2, '0');
         const year = formattedDate.getFullYear();
-        
+  
         const formattedDateString = `${month}/${day}/${year}`;
-        
+  
         // Add the formatted date to submissionsByDate
         if (!submissionsByDate[formattedDateString]) {
           submissionsByDate[formattedDateString] = 0;
         }
         submissionsByDate[formattedDateString]++;
       });
-      
-
+  
       for (const type of Object.keys(submissionPaths)) {
         newData[type] = {
           pending: results[index++],
           approved: results[index++],
         };
       }
-
-
-      newData['complaints'] = results[index];
+  
+      newData['complaints'] = results[index++];
       setSubmissionTypes(newData);
-
-
-      const total = results.reduce((acc, value) => acc + value, 0);
-      setTotalSubmissions(total);
-
-      const totalUsersCount = results.pop();
+  
+      const totalSubmissions = results.slice(0, index).reduce((acc, value) => acc + value, 0);
+      setTotalSubmissions(totalSubmissions);
+  
+      const totalUsersCount = results[index];
       setTotalUsers(totalUsersCount);
-
+  
       setSubmissionsByDate(submissionsByDate);
-      //console.log(submissionsByDate)
-      //console.log()
-      setLoading(false); 
+      setLoading(false);
     };
-
+  
     fetchData();
   }, []);
+  
+  
 
   useEffect(() => {
     if (!loading && Object.keys(submissionsByDate).length > 0) { 
@@ -225,7 +214,7 @@ function Dashboard() {
           },
           plugins: {
             legend: {
-              display: false, // Set display to false to remove the legend
+              display: false, 
             },
           },
         },

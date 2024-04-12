@@ -28,12 +28,12 @@ function Footer() {
           <h1 className="text-2xl font-semibold mb-4 text-left">Services</h1>
           <div className="grid grid-cols-2 gap-2">
             <ul className="text-lg text-left">
-              <li><Link  className="hover:underline">Brgy. Clearance</Link></li>
-              <li><Link  className="hover:underline">PWD Application</Link></li>
-              <li><Link  className="hover:underline">Senior App.</Link></li>
+              <li><Link to='/barangay-clearance'  className="hover:underline">Brgy. Clearance</Link></li>
+              <li><Link to='/pwd-application'  className="hover:underline">PWD Application</Link></li>
+              <li><Link to='/senior-citizen-application'  className="hover:underline">Senior App.</Link></li>
             </ul>
             <ul className="text-lg text-left">
-              <li><Link  className="hover:underline">Complaints</Link></li>
+              <li><Link to='/complaints'  className="hover:underline">Complaints</Link></li>
             </ul>
           </div>
         </div>
