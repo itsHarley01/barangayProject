@@ -23,7 +23,7 @@ function Home() {
       <Hero />
       <Slider />
 
-      <div className='justify-center  text-center'>
+      {/* <div className='justify-center  text-center'>
         <h1 className="text-3xl">Services</h1>
         <div className='flex  flex-col md:flex-row gap-6 my-10 justify-center border shadow-md py-10 px-10'>
           <ServiceItem icon={<FaHome className='text-blue-300' size={40} />} title="Barangay Clearance" />
@@ -31,7 +31,7 @@ function Home() {
           <ServiceItem icon={<FaUser className='text-blue-300' size={40} />} title="Senior Citizen Application" />
           <ServiceItem icon={<FaFileAlt className='text-blue-300' size={40} />} title="Complaints" />
         </div>
-      </div>
+      </div> */}
 
       <Officials />
       <MobileApp />

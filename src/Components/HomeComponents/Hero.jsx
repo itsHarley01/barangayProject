@@ -9,7 +9,7 @@ function Hero() {
           <div className="absolute inset-0 flex flex-col justify-center items-start px-6 text-left">
             <div className='text-black text-5xl mb-4'>Welcome to</div>
             <div className="relative">
-              <span className="text-transparent bg-gradient-to-r from-pink-500 to-blue-500 bg-clip-text text-7xl block font-semibold">Barangay Guadalupe</span>
+              <span className="text-transparent pb-4 bg-gradient-to-r from-pink-500 to-blue-500 bg-clip-text text-7xl block font-semibold">Barangay Guadalupe</span>
             </div>
             <div className="text-black text-4xl mt-4">Official Website</div>
 

@@ -10,7 +10,7 @@ const NewsCard = ({ image, headerText, description, date }) => {
         <p className="text-gray-600">{description}</p>
         <p className="text-gray-600 pt-1">Date Published: {date}</p>
       </div>
-      <NavLink className=' p-4 ' to='/news'><p className='text-blue-600 underline'>Read More</p></NavLink>
+      <NavLink className='m-5 p-2 mr-auto rounded-md bg-blue-200 text-blue-600 hover:bg-blue-100' to='/news'><p>Read More</p></NavLink>
     </div>
   );
 };
