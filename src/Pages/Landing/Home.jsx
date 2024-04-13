@@ -21,22 +21,20 @@ function Home() {
     <div >
       <StaticNavBar />
       <Hero />
+      <MVGfh />
       <Slider />
-
-      {/* <div className='justify-center  text-center'>
-        <h1 className="text-3xl">Services</h1>
+      <MobileApp />
+      <Officials />
+      
+      <div className='justify-center  text-center w-1/2 mx-auto'>
+        <h1 className="text-3xl">Explore our Services</h1>
         <div className='flex  flex-col md:flex-row gap-6 my-10 justify-center border shadow-md py-10 px-10'>
           <ServiceItem icon={<FaHome className='text-blue-300' size={40} />} title="Barangay Clearance" />
           <ServiceItem icon={<FaWheelchair className='text-blue-300' size={40} />} title="PWD Application" />
           <ServiceItem icon={<FaUser className='text-blue-300' size={40} />} title="Senior Citizen Application" />
           <ServiceItem icon={<FaFileAlt className='text-blue-300' size={40} />} title="Complaints" />
         </div>
-      </div> */}
-
-      <Officials />
-      <MobileApp />
-      <MVGfh />
-
+      </div>
       
     </div>
   )

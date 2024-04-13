@@ -55,7 +55,7 @@ function Officials() {
   };
 
   return (
-    <div className="w-3/4 m-auto my-20">
+    <div className="w-3/4 m-auto my-20 mt-36">
       <div className="flex flex-col justify-center text-center">
         <h1 className="text-2xl">Meet our</h1>
         <h1 className="text-4xl">Officials</h1>
