@@ -36,7 +36,8 @@ function Complaints() {
           };
         });
 
-        // Filter submissions based on search term
+        allSubmissions.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
         const filteredSubmissions = allSubmissions.filter(submission =>
           submission.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           submission.date.toLowerCase().includes(searchTerm.toLowerCase())

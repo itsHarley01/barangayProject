@@ -109,7 +109,9 @@ function CaptainDetails({showCaptain, onclick}) {
   return (
     <div className="mt-2 border rounded-sm">
       <h1 className="text-2xl text-pink-400 font-semibold mb-4">Captain Details</h1>
-      <button className='font-semibold w-full pl-2 my-2 bg-blue-300 text-left' onClick={onclick}>{showCaptain ? 'Minimize':'Show'}</button>
+      <button className='font-semibold px-2 mx-2 rounded-md my-2 bg-blue-300 text-left' onClick={onclick}>
+        {showCaptain ? 'Minimize Settings -' : 'Show Settings +'}
+      </button>
       {showCaptain && (
         <div className='grid grid-cols-2'>
           <div className='border flex  flex-col m-2'>

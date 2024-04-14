@@ -46,6 +46,9 @@ function PendingSubmissions() {
             });
           }
         });
+
+        allSubmissions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
         const filteredSubmissions = allSubmissions.filter(submission =>
           submission.name.toLowerCase().includes(search.toLowerCase()) ||
           submission.date.toLowerCase().includes(search.toLowerCase())
@@ -71,10 +74,25 @@ function PendingSubmissions() {
           email: submissionData.email,
           firstName: submissionData.firstName,
           lastName: submissionData.lastName,
+          sex: submissionData.sex,
+          maritalStatus: submissionData.maritalStatus,
           middleName: submissionData.middleName,
           address: submissionData.address,
           reason: submissionData.reason,
         };
+        case 'barangay-indigency':
+          return {
+            contact: submissionData.contact,
+            dateSubmitted: submissionData.dateSubmitted,
+            email: submissionData.email,
+            firstName: submissionData.firstName,
+            lastName: submissionData.lastName,
+            sex: submissionData.sex,
+            maritalStatus: submissionData.maritalStatus,
+            middleName: submissionData.middleName,
+            address: submissionData.address,
+            reason: submissionData.reason,
+          };
       case 'pwd':
       case 'senior':
         return {
@@ -101,6 +119,8 @@ function PendingSubmissions() {
     switch (category) {
       case 'barangay-clearance':
         return 'Barangay Clearance';
+      case 'barangay-indigency':
+          return 'Barangay Indigency';
       case 'pwd':
         return 'PWD Application';
       case 'senior':
@@ -114,6 +134,8 @@ function PendingSubmissions() {
   const getSubmissionName = (category, submissionData) => {
     switch (category) {
       case 'barangay-clearance':
+        return `${submissionData.firstName} ${submissionData.lastName}`;
+      case 'barangay-indigency':
         return `${submissionData.firstName} ${submissionData.lastName}`;
       case 'pwd':
         return `${submissionData.firstName} ${submissionData.lastName}`;
@@ -245,8 +267,9 @@ const sendEmail = async (formData) => {
         >
           <option value="all">All</option>
           <option value="barangay-clearance">Barangay Clearance</option>
-          <option value="pwd">PWD Application</option>
-          <option value="senior">Senior Citizen Application</option>
+          {/* <option value="pwd">PWD Application</option>
+          <option value="senior">Senior Citizen Application</option> */}
+          <option value="barangay-indigency">Barangay Indigency</option>
         </select>
       </div>
 
@@ -320,6 +343,58 @@ const sendEmail = async (formData) => {
                             <div className="grid grid-cols-2">
                               <span className="font-semibold">Last Name:</span>
                               <span className="border border-gray-300 p-1">{selectedSubmission.details.lastName}</span>
+                            </div>
+                            <div className="grid grid-cols-2">
+                              <span className="font-semibold">Sex:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.sex}</span>
+                            </div>
+                            <div className="grid grid-cols-2">
+                              <span className="font-semibold">Marital Status:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.maritalStatus}</span>
+                            </div>
+                            <div className="grid grid-cols-2">
+                              <span className="font-semibold">Address:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.address}</span>
+                            </div>
+                            <div className="grid grid-cols-2">
+                              <span className="font-semibold">Contact:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.contact}</span>
+                            </div>
+                            <div className="grid grid-cols-2">
+                              <span className="font-semibold">Email:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.email}</span>
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="font-semibold">Reason:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.reason}</span>
+                            </div>
+                          </div>
+                        )}
+                        {selectedSubmission.displayCategory === 'Barangay Indigency' && (
+                          <div className="flex flex-col space-y-4 border border-gray-300 rounded-lg p-4">
+                            <div className="grid grid-cols-2">
+                              <span className="font-semibold">Date Submitted:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.dateSubmitted}</span>
+                            </div>
+                            <div className="grid grid-cols-2">
+                              <span className="font-semibold">First Name:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.firstName}</span>
+                            </div>
+                            <div className="grid grid-cols-2">
+                              <span className="font-semibold">Middle Name:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.middleName}</span>
+                            </div>
+                            <div className="grid grid-cols-2">
+                              <span className="font-semibold">Last Name:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.lastName}</span>
+                            </div>
+                            <div className="grid grid-cols-2">
+                              <span className="font-semibold">Sex:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.sex}</span>
+                            </div>
+                            <div className="grid grid-cols-2">
+                              <span className="font-semibold">Marital Status:</span>
+                              <span className="border border-gray-300 p-1">{selectedSubmission.details.maritalStatus}</span>
                             </div>
                             <div className="grid grid-cols-2">
                               <span className="font-semibold">Address:</span>

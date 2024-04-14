@@ -20,7 +20,7 @@ function ManagePagesNav() {
             <nav className=" flex gap-6">
                 <NavLink to="/admin/manage-pages" className={`${hoverEffect} ${activeLink === '/admin/manage-pages' ? 'after:bg-black after:scale-x-100':''}`}>General</NavLink>
                 <NavLink to="/admin/manage-pages/Officials" className={`${hoverEffect} ${activeLink === '/admin/manage-pages/Officials' ? 'after:bg-black after:scale-x-100':''}`}>Officials</NavLink>
-                <NavLink to="/admin/manage-pages/news" className={`${hoverEffect} ${activeLink === '/admin/manage-pages/news' ? 'after:bg-black after:scale-x-100':''}`}>News</NavLink>
+                <NavLink to="/admin/manage-pages/news" className={`${hoverEffect} ${activeLink === '/admin/manage-pages/news' ? 'after:bg-black after:scale-x-100':''}`}>Events</NavLink>
                 <NavLink to="/admin/manage-pages/faq" className={`${hoverEffect} ${activeLink === '/admin/manage-pages/faq' ? 'after:bg-black after:scale-x-100':''}`}>FAQ</NavLink>
             </nav>     
         </div>

@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
 function NewsSlider() {
+
   const NextArrow = ({ onClick }) => {
     return (
       <div className="absolute top-0 right-0 flex items-center h-full" onClick={onClick}>
@@ -32,13 +33,14 @@ function NewsSlider() {
     onValue(newsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const newsArray = Object.values(data); 
+        const newsArray = Object.keys(data).map(id => ({ id, ...data[id] }));
         setNewsData(newsArray);
       }
     });
   }, []);
 
   useEffect(() => {
+    
     const handleResize = () => {
       const slidesToShow = window.innerWidth <= 768 ? 1 : 3; // Adjust as needed
       setSettings({ ...settings, slidesToShow });
@@ -70,6 +72,7 @@ function NewsSlider() {
         {newsData.map((newsItem, idx) => (
           <div key={idx} className={idx === newsIndex ? "*:justify-center transform scale-100 opacity-100 transition-transform duration-300 w-full" : "justify-center opacity-50 transform scale-[0.6] transition-transform duration-300"}>
             <NewsCard   
+              id={newsItem.id}
               image={newsItem.image}
               headerText={newsItem.title}
               description={newsItem.description}

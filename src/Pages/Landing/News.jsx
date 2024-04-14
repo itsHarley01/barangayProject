@@ -16,10 +16,7 @@ function News() {
     onValue(newsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const newsArray = Object.keys(data).map((key) => ({
-          id: key,
-          ...data[key],
-        }));
+        const newsArray = Object.keys(data).map(id => ({ id, ...data[id] }));
         setLoading(false);
         setNewsData(newsArray);
       }
@@ -34,12 +31,12 @@ function News() {
   return (
     <div>
       <StaticNavBar />
-      <HeroP text="Latest News" />
+      <HeroP text="Latest Events" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 m-20 p-10">
         {newsData.map((news) => (
           <NewsCardNews
-            key={news.id}
+            id={news.id}
             image={news.image}
             headerText={news.title}
             description={news.description}

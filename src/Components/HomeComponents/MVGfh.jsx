@@ -96,7 +96,7 @@ function MVGfh() {
             <p>Contact us to ask any Questions</p>
             <div className="relative">
               <NavLink
-                className='text-2xl text-blue-500 relative'
+                className='text-2xl text-blue-500 relative '
                 to='/contact'
                 onMouseEnter={handleHover}
                 onMouseLeave={handleMouseLeave}

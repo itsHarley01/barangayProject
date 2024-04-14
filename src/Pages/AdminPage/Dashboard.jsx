@@ -14,8 +14,7 @@ function Dashboard() {
   const [totalSubmissions, setTotalSubmissions] = useState(0);
   const [submissionTypes, setSubmissionTypes] = useState({
     'barangay-clearance': { pending: 0, approved: 0 },
-    'pwd': { pending: 0, approved: 0 },
-    'senior': { pending: 0, approved: 0 },
+    'barangay-indigency': { pending: 0, approved: 0 },
     'complaints': 0,
   });
   const [totalUsers, setTotalUsers] = useState(0);
@@ -35,8 +34,7 @@ function Dashboard() {
       const db = getDatabase();
       const submissionPaths = {
         'barangay-clearance': ['pending', 'approved'],
-        'pwd': ['pending', 'approved'],
-        'senior': ['pending', 'approved'],
+        'barangay-indigency': ['pending', 'approved'],
       };
   
       const submissionPromises = [];
@@ -184,12 +182,11 @@ function Dashboard() {
       barChartInstance.current = new Chart(barCtx, {
         type: 'bar',
         data: {
-          labels: ['Barangay-clearance', 'PWD Application', 'Senior Citizen Application', 'Complaints'],
+          labels: ['Barangay-clearance', 'barangay-indigency', 'Complaints'],
     datasets: [{
       label: '',
       data: [submissionTypes['barangay-clearance'].pending + submissionTypes['barangay-clearance'].approved,
-             submissionTypes['pwd'].pending + submissionTypes['pwd'].approved,
-             submissionTypes['senior'].pending + submissionTypes['senior'].approved,
+             submissionTypes['barangay-indigency'].pending + submissionTypes['barangay-indigency'].approved,
              submissionTypes['complaints']],
       backgroundColor: ['rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -241,6 +238,9 @@ function Dashboard() {
             case 'barangay-clearance':
               text = 'Barangay-clearance';
               break;
+              case 'barangay-indigency':
+                text = 'Barangay-Indigency';
+                break;
             case 'complaints':
               text = 'Complaints';
               break;

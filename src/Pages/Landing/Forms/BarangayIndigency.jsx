@@ -8,7 +8,7 @@ import LoadingAnimation from '../../../Components/Loading/LoadingAnimation';
 import { getUnixTime, format } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
 
-const BarangayClearanceForm = () => {
+const BarangayIndigency = () => {
   const [step, setStep] = useState(1);
   const [agreement, setAgreement] = useState(false);
   const [postSubmit, setPostSubmit] = useState(false);
@@ -62,7 +62,7 @@ const BarangayClearanceForm = () => {
     };
 
     const database = getDatabase();
-    const formRef = dbRef(database, 'submissions/forms/barangay-clearance/pending');
+    const formRef = dbRef(database, 'submissions/forms/barangay-indigency/pending');
 
     try {
       console.log(formDataWithDate)
@@ -79,12 +79,12 @@ const BarangayClearanceForm = () => {
   return (
     <div>
         <StaticNavBar />
-        <HeroP text='Barangay Clearance'/>
+        <HeroP text='Barangay Indigency'/>
         <div className="flex justify-center py-10 w-full h-full bg-gray-100">
 
           <div className="bg-white rounded-lg shadow-lg w-[60%]">
             <div className='text-center items-center w-full bg-blue-200 mb-10'>
-              <h1 className='text-center text-2xl align-middle py-10'>Barangay Clearance</h1>
+              <h1 className='text-center text-2xl align-middle py-10'>Barangay Indigency</h1>
             </div>
             <StepProgressBar currentStep={postSubmit ? 4 : step} totalSteps={3} /> 
              
@@ -98,7 +98,7 @@ const BarangayClearanceForm = () => {
                     <li>-Personal info</li>
                     <li>-Contact info</li>
                   </ul>
-                  <p className='py-5'>By submitting your contact information for a barangay clearance, you agree to keep it accurate and private. We'll use your information only for processing your application. </p>
+                  <p className='py-5'>By submitting your contact information for a barangay Indigency, you agree to keep it accurate and private. We'll use your information only for processing your application. </p>
                   <label className="">
                     <input type="checkbox" checked={agreement} onChange={handleAgreementChange} className="mr-2 mb-5" />
                     I agree and I want to continue.
@@ -193,5 +193,4 @@ const BarangayClearanceForm = () => {
   );
 };
 
-export default BarangayClearanceForm;
-
+export default BarangayIndigency;

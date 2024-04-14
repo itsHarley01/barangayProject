@@ -17,8 +17,7 @@ function Services() {
       <div className='flex mx-auto justify-center text-center w-1/2 '>
         <div className='flex flex-col md:flex-row gap-6 my-10 justify-center border shadow-md py-5 px-10'>
           <ServiceItem icon={<FaHome className='text-blue-300' size={40} />} title="Barangay Clearance" />
-          <ServiceItem icon={<FaWheelchair className='text-blue-300' size={40} />} title="PWD Application" />
-          <ServiceItem icon={<FaUser className='text-blue-300' size={40} />} title="Senior Citizen Application" />
+          <ServiceItem icon={<FaUser className='text-blue-300' size={40} />} title="Barangay Indigency" />
           <ServiceItem icon={<FaFileAlt className='text-blue-300' size={40} />} title="Complaints" />
         </div>
       </div>
@@ -28,8 +27,7 @@ function Services() {
       <div className="flex justify-center items-center mb-10 h-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <ServicesCard img={''} reactIcon={<FaHome/>} title="Barangay Clearance" path={'/barangay-clearance'} />
-          <ServicesCard img={''} reactIcon={<FaWheelchair />} title="PWD Application" path={'/pwd-application'} />
-          <ServicesCard img={''} reactIcon={<FaUser />} title="Senior Citizen Application" path={'/senior-citizen-application'} />
+          <ServicesCard img={''} reactIcon={<FaUser />} title="Barangay Indigency" path={'/barangay-indigency'} />
           <ServicesCard img={''} reactIcon={<FaFileAlt />} title="Complaints" path={'/complaints'} />
         </div>
       </div>

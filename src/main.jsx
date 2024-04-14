@@ -37,6 +37,8 @@ import Complaints from './Pages/AdminPage/Complaints';
 import LoginPage from './Pages/Login/LoginPage';
 import { AuthProvider } from './AuthContext/AuthContext';
 import ProtectedRoute from './AuthContext/ProtectedRoute';
+import BarangayIndigency from './Pages/Landing/Forms/BarangayIndigency';
+import ViewNews from './Components/ViewNews';
 
 function App() {
 
@@ -53,8 +55,10 @@ function App() {
         { path: '/privacy-policy', element: <PrivacyPolicy /> },
         { path: '/faq', element: <Faq /> },
         { path: '/download', element: <DownloadApp /> },
-        { path: '/news', element: <News /> },
+        { path: '/news', element: <News />, },
+        { path: '/news/:id', element: <ViewNews/> },
         { path: '/barangay-clearance', element: <BarangayClearanceForm /> },
+        { path: '/barangay-indigency', element: <BarangayIndigency /> },
         { path: '/pwd-application', element: <PwdApplicationForm /> },
         { path: '/senior-citizen-application', element: <SeniorCitizenApplicationForm /> },
         { path: '/complaints', element: <ComplaintsForm /> },
