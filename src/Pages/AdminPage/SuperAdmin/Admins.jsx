@@ -13,6 +13,7 @@ function Admins() {
   const [editedFirstName, setEditedFirstName] = useState('');
   const [editedMiddleName, setEditedMiddleName] = useState('');
   const [editedLastName, setEditedLastName] = useState('');
+  const [editedUsername, setEditedUsername] = useState('');
   const [editedPhoneNumber, setEditedPhoneNumber] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false); 
 
@@ -60,6 +61,7 @@ function Admins() {
     setEditedMiddleName(admin.middleName);
     setEditedLastName(admin.lastName);
     setEditedPhoneNumber(admin.phoneNumber);
+    setEditedUsername(admin.username);
   };
 
   const handleUpdateAdmin = () => {
@@ -71,6 +73,7 @@ function Admins() {
         middleName: editedMiddleName,
         lastName: editedLastName,
         phoneNumber: editedPhoneNumber,
+        username: editedUsername,
       })
         .then(() => {
           setEditAdmin(null); 
@@ -190,6 +193,17 @@ function Admins() {
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
+            <div className="mb-4">
+              <label htmlFor="username">Username:</label>
+              <input
+                type="text"
+                id="username"
+                value={editedUsername}
+                onChange={(e) => setEditedUsername(e.target.value)}
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            
             <div className="flex justify-end">
               <button onClick={handleUpdateAdmin} className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 mr-2">Update</button>
               <button onClick={() => setEditAdmin(null)} className="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">Cancel</button>

@@ -20,7 +20,6 @@ function Home() {
       <MobileApp />
       <Officials />
       <ExServices />
-      
     </div>
   )
 }

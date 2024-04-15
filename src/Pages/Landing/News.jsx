@@ -31,7 +31,7 @@ function News() {
   return (
     <div>
       <StaticNavBar />
-      <HeroP text="Latest Events" />
+      <HeroP text="Latest Events & News" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 m-20 p-10">
         {newsData.map((news) => (

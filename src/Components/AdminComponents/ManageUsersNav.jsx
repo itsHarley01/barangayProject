@@ -1,14 +1,13 @@
 import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
-import { useAuthContext } from "../../AuthContext/AuthContext";
 import { useState, useEffect } from "react";
 
 function ManageUsersNav() {
-  const { userData } = useAuthContext();
+  const userData  = localStorage.getItem('role');
   const [userRole, setUserRole] = useState();
   const navigate = useNavigate(); 
   const location = useLocation();
   const [activeLink, setActiveLink] = useState('')
-  const hoverEffect = "relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-transparent after:w-full after:scale-x-0 after:transition after:duration-300 after:origin-left hover:after:bg-black hover:after:scale-x-100"
+  const hoverEffect = "relative text-xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-black after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left"
 
   useEffect(() => {
     setActiveLink(location.pathname);
@@ -16,9 +15,9 @@ function ManageUsersNav() {
   
   useEffect(() => {
     if (userData) {
-      if (userData.role === 'admin') {
+      if (userData === 'admin') {
         setUserRole('admin');
-      } else if (userData.role === 'superadmin') {
+      } else if (userData === 'superadmin') {
         setUserRole('superadmin');
       }
     }
@@ -26,6 +25,7 @@ function ManageUsersNav() {
 
 
   useEffect(() => {
+    console.log('userrole',userRole)
     if (userRole === 'admin') {
       navigate('/admin/manage-users'); 
     }

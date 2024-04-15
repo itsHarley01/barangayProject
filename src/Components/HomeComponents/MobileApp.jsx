@@ -1,4 +1,4 @@
-import muPhone from '../../assets/Images/phone.png'
+import muPhone from '../../assets/Images/pmock.png'
 import { NavLink } from 'react-router-dom'
 
 function MobileApp() {

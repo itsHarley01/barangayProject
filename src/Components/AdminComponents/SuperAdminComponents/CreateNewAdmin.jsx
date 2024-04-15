@@ -1,20 +1,40 @@
 import { useState } from 'react';
-import { getDatabase, ref, set } from 'firebase/database';
+import { getDatabase, ref, set,push } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../../AuthContext/AuthContext';
 import LoadingAnimation from '../../Loading/LoadingAnimation';
 
 const CreateNewAdmin = () => {
-  const { createNewAdmin, newAdminDetails, setNewAdminDetails } = useAuthContext();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [newAdminDetails, setNewAdminDetails] = useState({
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    phoneNumber: '',
+    email: '',
+    password: '',
+  });
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      await createNewAdmin(newAdminDetails.email, newAdminDetails.password, newAdminDetails);
+      const db = getDatabase();
+      const adminsRef = ref(db, 'admins/');
+      const newAdminRef = push(adminsRef); // Assuming you have a unique identifier for each admin
+
+      await set(newAdminRef, {
+        firstName: newAdminDetails.firstName,
+        middleName: newAdminDetails.middleName,
+        lastName: newAdminDetails.lastName,
+        phoneNumber: newAdminDetails.phoneNumber,
+        email: newAdminDetails.email,
+        username: newAdminDetails.username,
+        password: newAdminDetails.password,
+        role:'admin'
+      });
+
       console.log('Admin created successfully');
       navigate('/admin/manage-users/admins');
     } catch (error) {
@@ -89,6 +109,18 @@ const CreateNewAdmin = () => {
             required
           />
         </div>
+        <div className="mb-4">
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={newAdminDetails.username}
+              onChange={(e) => setNewAdminDetails({ ...newAdminDetails, username: e.target.value })}
+              className="mt-1 px-2 border w-full block py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              required
+            />
+          </div>
         <div className="mb-4">
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
           <input

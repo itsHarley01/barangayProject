@@ -23,8 +23,8 @@ function SideBar() {
     setActiveLink(location.pathname);
   }, [location.pathname]);
 
-  console.log(userData)
-  console.log("user", user)
+  // console.log(userData)
+  // console.log("user", user)
 
   useEffect(() => {
     if (userData) {
@@ -42,6 +42,11 @@ function SideBar() {
     setShowPopup(false);
     try {
       await userLogout();
+      localStorage.removeItem('user')
+      localStorage.removeItem('role')
+      localStorage.removeItem('firstname')
+      localStorage.removeItem('lastname')
+      localStorage.removeItem('middlename')
       navigate("/login");
     } catch (error) {
       console.log(error.message);
@@ -51,6 +56,7 @@ function SideBar() {
   const handleCancel = () => {
     setShowPopup(false);
     console.log(user.uid)
+    console.log(localStorage.getItem('user'))
   };
 
   const handleDropdownToggle = () => {
@@ -65,7 +71,7 @@ function SideBar() {
           <span className="text-lg font-bold">Barangay Guadalupe</span>
         </div>
         <div>
-          <p className="text-sm"> {user && `${userRole}: ${firstName} ${lastName}`} </p>
+          <p className="text-sm"> {user && `${localStorage.getItem('role')}: ${localStorage.getItem('firstname')} ${localStorage.getItem('lastname')}`} </p>
         </div>
       </div>
       <nav className="flex flex-col space-y-4 flex-1 pt-10">
