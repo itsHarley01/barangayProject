@@ -29,8 +29,9 @@ function Footer() {
           <div className="grid grid-cols-2 gap-2">
             <ul className="text-lg text-left">
               <li><Link to='/barangay-clearance'  className="hover:underline">Brgy. Clearance</Link></li>
-              <li><Link to='/pwd-application'  className="hover:underline">PWD Application</Link></li>
-              <li><Link to='/senior-citizen-application'  className="hover:underline">Senior App.</Link></li>
+              <li><Link to='/barangay-indigency'  className="hover:underline">Brgy. Indigency</Link></li>
+              {/* <li><Link to='/pwd-application'  className="hover:underline">PWD Application</Link></li>
+              <li><Link to='/senior-citizen-application'  className="hover:underline">Senior App.</Link></li> */}
             </ul>
             <ul className="text-lg text-left">
               <li><Link to='/complaints'  className="hover:underline">Complaints</Link></li>
