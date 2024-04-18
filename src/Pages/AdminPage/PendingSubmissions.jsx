@@ -163,12 +163,12 @@ function PendingSubmissions() {
   };
 
   const handleConfirm = async () => {
-    setLoading(true)
+    setLoading(true);
     if (selectedSubmission) {
       const { category, id, details, date } = selectedSubmission;
   
       setLoading(true);
-
+  
       const currentDate = new Date();
       const formattedDate = format(currentDate, 'MMMM dd yyyy');
       setFormattedDate(formattedDate);
@@ -181,28 +181,42 @@ function PendingSubmissions() {
   
       const database = getDatabase();
       const pendingPath = `submissions/forms/${category}/pending/${id}`;
-      const approvedPath = `submissions/forms/${category}/approved/${id}`; 
+      let approvedPath = '';
+  
+      switch (category) {
+        case 'barangay-clearance':
+          approvedPath = `submissions/forms/${category}/accepted/${id}`;
+          break;
+        case 'barangay-indigency':
+          approvedPath = `submissions/forms/${category}/approved/${id}`;
+          break;
+        default:
+          console.error('Invalid category:', category);
+          setLoading(false);
+          return;
+      }
+  
       const psubmissionRef = ref(database, pendingPath);
       const approvedRef = ref(database, approvedPath);
   
       try {
-        const pendingSnapshot = await get(psubmissionRef); 
+        const pendingSnapshot = await get(psubmissionRef);
         if (pendingSnapshot.exists()) {
           const pendingData = pendingSnapshot.val();
           await set(approvedRef, { ...pendingData, ...formDataWithDate });
           await remove(psubmissionRef);
           console.log('Submission moved to approved successfully.');
-
+  
           await sendEmail({ ...selectedSubmission.details, dateApproved: formattedDate, category:category });
           console.log('Email sent after form approval.');
-          setLoading(false)
+          setLoading(false);
         } else {
           console.error('Pending submission not found.');
-          setLoading(false)
+          setLoading(false);
         }
       } catch (error) {
         console.error('Error moving submission to approved:', error);
-        setLoading(false)
+        setLoading(false);
       } finally {
         setLoading(false);
       }
@@ -211,14 +225,17 @@ function PendingSubmissions() {
       setShowDetails(false);
     } else {
       console.error('No selected submission found.');
-      setLoading(false)
+      setLoading(false);
     }
   };
+  
 
 const sendEmail = async (formData) => {
   try {
     const templateParams = {
       to_email: formData.email, 
+      message1: 'has been accepted',
+      message2: 'You may now proceed to the Barangay for payment of the clearance fee.',
       category: getCategoryName(formData.category), 
       dateApproved: formData.dateApproved, 
       firstName: formData.firstName,
@@ -238,18 +255,13 @@ const sendEmail = async (formData) => {
   }
 };
 
-  
-  
-  
 
-  
   const handleCancel = () => {
     setShowPopup(false);
   };
   
   return (
-    <div className="m-10">
-      <h1 className='font-semibold text-3xl pb-4 border-b'>Pending Submissions</h1>
+    <div className="">
 
       <div className="flex items-center mt-10 mb-4">
         <input
@@ -273,7 +285,7 @@ const sendEmail = async (formData) => {
         </select>
       </div>
 
-      <div className="border overflow-x-auto h-[69vh]">
+      <div className="border overflow-x-auto h-[63vh]">
         <table className="w-full table-fixed">
           <thead className="sticky top-0 bg-white z-50">
             <tr className="">
@@ -539,13 +551,14 @@ const sendEmail = async (formData) => {
                       </div>
     
                       <div className="pt-2">
-                         <button className="w-full py-2 bg-green-400 text-gray-600 hover:bg-green-200 hover:text-blue-900" onClick={() => setShowPopup(true)}>Approve</button>
+                         <button className="w-full py-2 bg-green-400 text-gray-600 hover:bg-green-200 hover:text-blue-900" onClick={() => setShowPopup(true)}>{`${selectedSubmission.category === 'barangay-clearance' ? 'Accept form':'Approved form'}`}</button>
                       </div>
                         
                     </div>
                     {showPopup && (
+                      
                       <Confirmation
-                        text="Mark this submission as Approved?"
+                      text={`Mark this submission as ${selectedSubmission.category === 'barangay-clearance'? 'accepted':'approved'}?`}
                         onConfirm={handleConfirm}
                         onCancel={handleCancel}
                         confirmText="Confirm"

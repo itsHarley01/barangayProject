@@ -71,7 +71,6 @@ function Services() {
         </div>
       </div>
 
-
       <div className=' mx-10 my-10 text-center border-b'><p className='text-3xl'>Online Services</p></div>
       <div className="flex justify-center items-center mb-10 h-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

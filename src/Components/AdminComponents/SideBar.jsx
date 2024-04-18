@@ -79,7 +79,7 @@ function SideBar() {
         <NavLink to='/admin/manage-users' className={`px-4 py-2 hover:bg-fuchsia-600 ${activeLink === '/admin/manage-users' ? 'bg-fuchsia-600':''} `} >Manage Users</NavLink>
 
         <div className="relative">
-          <button onClick={handleDropdownToggle} className={`w-full px-4 py-2 text-left flex gap-2 items-center hover:bg-fuchsia-600 ${activeLink === '/admin/submissions/pending' || activeLink === '/admin/submissions/approved' || activeLink === '/admin/submissions/complaints' ? 'bg-fuchsia-600':''} ${showDropdown ? ' ' : ' '} `}>
+          <button onClick={handleDropdownToggle} className={`w-full px-4 py-2 text-left flex gap-2 items-center hover:bg-fuchsia-600 ${activeLink === '/admin/submissions/pending-forms' || activeLink === '/admin/submissions/approved' || activeLink === '/admin/submissions/complaints' || activeLink === '/admin/submissions/pending-forms/accepted'   ? 'bg-fuchsia-600':''} ${showDropdown ? ' ' : ' '} `}>
             Submissions {showDropdown ? <RiArrowUpSFill /> : <RiArrowDownSFill />}
           </button>
           <div
@@ -87,7 +87,7 @@ function SideBar() {
           >
             {showDropdown && (
               <div className="flex flex-col text-left border-y  border-x-0">
-                <NavLink to='/admin/submissions/pending' className={`px-4 py-2 pl-10 hover:bg-fuchsia-600 ${activeLink === '/admin/submissions/pending' ? 'bg-fuchsia-600':''} `}>Pending Submissions</NavLink>
+                <NavLink to='/admin/submissions/pending-forms' className={`px-4 py-2 pl-10 hover:bg-fuchsia-600 ${activeLink === '/admin/submissions/pending-forms' || activeLink === '/admin/submissions/pending-forms/accepted' ? 'bg-fuchsia-600':''} `}>Pending Submissions</NavLink>
                 <NavLink to='/admin/submissions/approved' className={` px-4 py-2 pl-10 hover:bg-fuchsia-600 ${activeLink === '/admin/submissions/approved' ? 'bg-fuchsia-600':''} `}>Approved Submissions</NavLink>
                 <NavLink to='/admin/submissions/complaints' className={` px-4 py-2 pl-10 hover:bg-fuchsia-600 ${activeLink === '/admin/submissions/complaints' ? 'bg-fuchsia-600':''} `}>Complaints</NavLink>
               </div>

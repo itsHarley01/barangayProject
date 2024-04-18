@@ -39,6 +39,8 @@ import { AuthProvider } from './AuthContext/AuthContext';
 import ProtectedRoute from './AuthContext/ProtectedRoute';
 import BarangayIndigency from './Pages/Landing/Forms/BarangayIndigency';
 import ViewNews from './Components/ViewNews';
+import PendingNavBar from './Components/AdminComponents/PendingNavBar';
+import AcceptedSubmission from './Pages/AdminPage/AcceptedSubmission';
 
 function App() {
 
@@ -85,7 +87,11 @@ function App() {
             { path:'/admin/manage-pages/faq', element:<ManageFaq /> },
           ]
         },
-        { path:'/admin/submissions/pending', element:<PendingSubmissions /> },
+        { path:'/admin/submissions/pending-forms', element:<PendingNavBar/>, 
+        children:[
+          { path:'/admin/submissions/pending-forms', element:<PendingSubmissions /> },
+          { path:'/admin/submissions/pending-forms/accepted', element:<AcceptedSubmission /> },
+        ]},
         { path:'/admin/submissions/approved', element:<ApprovedSubmissions /> },
         { path:'/admin/submissions/complaints', element:<Complaints /> },
         { path:'/admin/add-new-admin', element:<CreateAdmin /> },

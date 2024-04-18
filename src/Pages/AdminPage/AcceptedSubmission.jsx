@@ -1,21 +1,24 @@
-import { useState, useEffect, useRef } from "react";
-import { getDatabase, ref, onValue } from 'firebase/database';
-import LoadingAnimation from "../../Components/Loading/LoadingAnimation";  
-import{ ReactToPrint } from 'react-to-print';
-import CleranceCertificate from "../../Components/CleranceCertificate";
+import { useState, useEffect } from "react";
+import { getDatabase, ref, push, remove, update, get, set, onValue } from 'firebase/database';
+import LoadingAnimation from "../../Components/Loading/LoadingAnimation";
+import Confirmation from "../../Components/PopUps/Confirmation";
+import { getUnixTime, format } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
+import emailjs from '@emailjs/browser';
 
-
-
-
-
-function ApprovedSubmissions() {
+function AcceptedSubmission() {
+  // State variables
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('all');
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true); 
   const [showDetails, setShowDetails] = useState(false);
-  const [selectedSubmission, setSelectedSubmission] = useState(null)
-  const componentRef = useRef(null);
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [formattedDate, setFormattedDate] = useState('');
+  const [amount, setAmount] = useState('');
+  const [receiptId, setReceiptId] = useState('');
+  const [showReceiptForm, setShowReceiptForm] = useState(false);
 
   useEffect(() => {
     fetchSubmissions(sortBy, searchTerm);
@@ -24,38 +27,36 @@ function ApprovedSubmissions() {
   const fetchSubmissions = async (category, search) => {
     const db = getDatabase();
     const submissionsRef = ref(db, 'submissions/forms');
-
+  
     onValue(submissionsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
         const allSubmissions = [];
         Object.keys(data).forEach((cat) => {
           if (cat === category || category === 'all') {
-            const submissionsData = data[cat]?.approved || {};
+            const submissionsData = data[cat]?.accepted || {};
             Object.keys(submissionsData).forEach((submissionId) => {
               const submissionData = submissionsData[submissionId];
               const formattedSubmission = {
                 id: submissionId,
                 category: cat,
-                displayCategory: getCategoryName(cat),
+                displayCategory: getCategoryName(cat), 
                 name: getSubmissionName(cat, submissionData),
                 date: submissionData.dateSubmitted,
-                dateApproved:submissionData.dateApproved,
                 details: getSubmissionDetails(cat, submissionData),
-                
               };
               allSubmissions.push(formattedSubmission);
             });
           }
-          setLoading(false)
         });
 
         allSubmissions.sort((a, b) => new Date(b.date) - new Date(a.date));
-        
+
         const filteredSubmissions = allSubmissions.filter(submission =>
           submission.name.toLowerCase().includes(search.toLowerCase()) ||
           submission.date.toLowerCase().includes(search.toLowerCase())
         );
+        setLoading(false);
         setSubmissions(filteredSubmissions);
       } else {
         console.log('No data found for submissions.');
@@ -65,44 +66,8 @@ function ApprovedSubmissions() {
   };
   
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
 
-  const handleSortChange = (e) => {
-    setSortBy(e.target.value);
-  };
-
-  const getCategoryName = (category) => {
-    switch (category) {
-      case 'barangay-clearance':
-        return 'Barangay Clearance';
-      case 'barangay-indigency':
-        return 'Barangay Indigency';
-      case 'pwd':
-        return 'PWD Application';
-      case 'senior':
-        return 'Senior Citizen Application';
-      default:
-        return 'Unknown Category';
-    }
-  };
-
-  const getSubmissionName = (category, submissionData) => {
-    switch (category) {
-      case 'barangay-clearance':
-        return `${submissionData.firstName} ${submissionData.lastName}`;
-        case 'barangay-indigency':
-          return `${submissionData.firstName} ${submissionData.lastName}`;
-      case 'pwd':
-        return submissionData.contact;
-      case 'senior':
-        return submissionData.firstName;
-      default:
-        return 'Unknown Name';
-    }
-  };
-
+  // Helper functions for submission details formatting
   const getSubmissionDetails = (category, submissionData) => {
     switch (category) {
       case 'barangay-clearance':
@@ -114,14 +79,11 @@ function ApprovedSubmissions() {
           lastName: submissionData.lastName,
           sex: submissionData.sex,
           maritalStatus: submissionData.maritalStatus,
-          address: submissionData.address,
-          dateApproved:submissionData.dateApproved,
           middleName: submissionData.middleName,
+          address: submissionData.address,
           reason: submissionData.reason,
-          amountPaid:submissionData.amountPaid,
-          receiptId:submissionData.receiptId,
         };
-      case 'barangay-indigency':
+        case 'barangay-indigency':
           return {
             contact: submissionData.contact,
             dateSubmitted: submissionData.dateSubmitted,
@@ -130,11 +92,9 @@ function ApprovedSubmissions() {
             lastName: submissionData.lastName,
             sex: submissionData.sex,
             maritalStatus: submissionData.maritalStatus,
-            address: submissionData.address,
-            dateApproved:submissionData.dateApproved,
             middleName: submissionData.middleName,
+            address: submissionData.address,
             reason: submissionData.reason,
-    
           };
       case 'pwd':
       case 'senior':
@@ -146,7 +106,6 @@ function ApprovedSubmissions() {
           dateSubmitted: submissionData.dateSubmitted,
           email: submissionData.email,
           firstName: submissionData.firstName,
-          dateApproved:submissionData.dateApproved,
           idBack: submissionData.idBack,
           idFront: submissionData.idFront,
           lastName: submissionData.lastName,
@@ -158,14 +117,148 @@ function ApprovedSubmissions() {
     }
   };
 
+  // Render category name based on category string
+  const getCategoryName = (category) => {
+    switch (category) {
+      case 'barangay-clearance':
+        return 'Barangay Clearance';
+      case 'barangay-indigency':
+          return 'Barangay Indigency';
+      case 'pwd':
+        return 'PWD Application';
+      case 'senior':
+        return 'Senior Citizen Application';
+      default:
+        return 'Unknown Category';
+    }
+  };
+
+  // Render submission name based on category and submission data
+  const getSubmissionName = (category, submissionData) => {
+    switch (category) {
+      case 'barangay-clearance':
+        return `${submissionData.firstName} ${submissionData.lastName}`;
+      case 'barangay-indigency':
+        return `${submissionData.firstName} ${submissionData.lastName}`;
+      case 'pwd':
+        return `${submissionData.firstName} ${submissionData.lastName}`;
+      case 'senior':
+        return `${submissionData.firstName} ${submissionData.lastName}`;
+      default:
+        return 'Unknown Name';
+    }
+  };
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Handle sort dropdown change
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value);
+  };
+
+  // Handle view details button click
   const handleViewDetails = (submission) => {
     setSelectedSubmission(submission);
     setShowDetails(true);
   };
 
+  const handleConfirm = async () => {
+    setLoading(true)
+    if (selectedSubmission) {
+      const { category, id, details, date } = selectedSubmission;
+  
+      setLoading(true);
+
+      const currentDate = new Date();
+      const formattedDate = format(currentDate, 'MMMM dd yyyy');
+      setFormattedDate(formattedDate);
+      console.log(formattedDate);
+  
+      const formDataWithDate = {
+        ...details,
+        dateApproved: formattedDate,
+        amountPaid: amount,
+        receiptId: receiptId,
+      };
+  
+      const database = getDatabase();
+      const acceptedPath = `submissions/forms/${category}/accepted/${id}`;
+      const approvedPath = `submissions/forms/${category}/approved/${id}`; 
+      const psubmissionRef = ref(database, acceptedPath);
+      const approvedRef = ref(database, approvedPath);
+  
+      try {
+        const pendingSnapshot = await get(psubmissionRef); 
+        if (pendingSnapshot.exists()) {
+          const pendingData = pendingSnapshot.val();
+          await set(approvedRef, { ...pendingData, ...formDataWithDate });
+          await remove(psubmissionRef);
+          console.log('Submission moved to approved successfully.');
+
+          await sendEmail({ ...selectedSubmission.details, dateApproved: formattedDate, category:category, receiptId:receiptId, amountPaid:amount });
+          console.log('Email sent after form approval.');
+          setLoading(false)
+        } else {
+          console.error('Pending submission not found.');
+          setLoading(false)
+        }
+      } catch (error) {
+        console.error('Error moving submission to approved:', error);
+        setLoading(false)
+      } finally {
+        setLoading(false);
+      }
+  
+      setShowPopup(false);
+      setShowReceiptForm(false);
+      setShowDetails(false);
+    } else {
+      console.error('No selected submission found.');
+      setLoading(false)
+    }
+  };
+
+const sendEmail = async (formData) => {
+  try {
+    const templateParams = {
+      to_email: formData.email, 
+      message1: 'has been Approved',
+      message2: 'You can now claim your certifcate at the Barangay.',
+      rId:'Reciept ID:' + receiptId,
+      amountPaid:'Amount Paid: ₱'+ amount ,
+      category: getCategoryName(formData.category), 
+      dateApproved: formData.dateApproved, 
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+    };
+
+    const response = await emailjs.send(
+      'service_v7dp4yg',
+      'template_81jzmx4',
+      templateParams,
+      'AGpI6zeuhFsu1Ok5t'
+    );
+
+    console.log('Email sent:', response);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+};
+
+  
+  
+  
+
+  
+  const handleCancel = () => {
+    setShowPopup(false);
+  };
+  
   return (
-    <div className="m-10">
-      <h1 className='font-semibold text-3xl pb-4 border-b'>Approved Submissions</h1>
+    <div className="">
 
       <div className="flex items-center mt-10 mb-4">
         <input
@@ -189,14 +282,13 @@ function ApprovedSubmissions() {
         </select>
       </div>
 
-      <div className="border overflow-x-auto h-[69vh]">
+      <div className="border overflow-x-auto h-[63vh]">
         <table className="w-full table-fixed">
-          <thead className="sticky top-0 bg-white z-50">
+          <thead className="sticky top-0 bg-white z-10">
             <tr className="">
               <th className="px-6 py-3 bg-blue-400 text-left text-xs font-semibold text-black uppercase tracking-wider">Category</th>
               <th className="px-6 py-3 bg-blue-400 text-left text-xs font-semibold text-black uppercase tracking-wider">Name</th>
               <th className="px-6 py-3 bg-blue-400 text-left text-xs font-semibold text-black uppercase tracking-wider">Date Submitted</th>
-              <th className="px-6 py-3 bg-blue-400 text-left text-xs font-semibold text-black uppercase tracking-wider">Date Approved</th>
               <th className="px-6 py-3 bg-blue-400 text-left text-xs font-semibold text-black uppercase tracking-wider">Action</th>
             </tr>
           </thead>
@@ -206,7 +298,6 @@ function ApprovedSubmissions() {
                 <td className="px-6 py-4 whitespace-nowrap">{submission.displayCategory}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{submission.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{submission.date}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{submission.dateApproved}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <button
                     className="bg-blue-200 p-2 rounded-md font-semibold text-blue-900 hover:text-blue-700" onClick={() => handleViewDetails(submission)}>View</button>
@@ -216,10 +307,10 @@ function ApprovedSubmissions() {
               </tbody>
             </table>
           </div>
-      {loading && <LoadingAnimation/>}
-
-      {showDetails && selectedSubmission && (
-                  <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+          {loading && <LoadingAnimation />}
+    
+          {showDetails && selectedSubmission && (
+                  <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-20">
                     <div className="bg-white py-10 w-[80vh] px-4 rounded-lg max-w-md h-[80vh] " style={{ maxHeight: '80vh' }}>
                       <div className="flex justify-between  border-b" >
                         <h1 className="text-xl pb-2 font-semibold">{selectedSubmission.displayCategory}</h1>
@@ -285,14 +376,6 @@ function ApprovedSubmissions() {
                             <div className="flex flex-col">
                               <span className="font-semibold">Reason:</span>
                               <span className="border border-gray-300 p-1">{selectedSubmission.details.reason}</span>
-                            </div>
-                            <div className="grid grid-cols-2">
-                              <span className="font-semibold">Amount Paid:</span>
-                              <span className="border border-gray-300 p-1">{selectedSubmission.details.amountPaid}</span>
-                            </div>
-                            <div className="grid grid-cols-2">
-                              <span className="font-semibold">Reciept Id:</span>
-                              <span className="border border-gray-300 p-1">{selectedSubmission.details.receiptId}</span>
                             </div>
                           </div>
                         )}
@@ -440,10 +523,6 @@ function ApprovedSubmissions() {
                               <span className="border border-gray-300 p-1">{selectedSubmission.details.address}</span>
                             </div>
                             <div className="grid grid-cols-2">
-                              <span className="font-semibold">Birth Date:</span>
-                              <span className="border border-gray-300 p-1">{selectedSubmission.details.birthDate}</span>
-                            </div>
-                            <div className="grid grid-cols-2">
                               <span className="font-semibold">Age:</span>
                               <span className="border border-gray-300 p-1">{selectedSubmission.details.age}</span>
                             </div>
@@ -466,37 +545,81 @@ function ApprovedSubmissions() {
                             )}
                           </div>
                         )}
-
-                        
                       </div>
-                      <div style={{ display: 'none' }}>
-                        <CleranceCertificate forwardedRef={componentRef} 
-                        name={selectedSubmission.details.firstName+" "+selectedSubmission.details.middleName+" "+selectedSubmission.details.lastName}
-                        address={selectedSubmission.details.address}
-                        cat={selectedSubmission.displayCategory}
-                        date={selectedSubmission.details.dateApproved}
-                        />
+    
+                      <div className="pt-2">
+                         <button className="w-full py-2 bg-green-400 text-gray-600 hover:bg-green-200 hover:text-blue-900" onClick={() => setShowReceiptForm(true)}>Proceed</button>
                       </div>
-
-                      <ReactToPrint
-                        trigger={() => (
-                          <div className="pt-2">
-                            <button className="w-full py-2 bg-green-400 text-gray-700 hover:bg-green-200 hover:text-blue-900">Print</button>
-                          </div>
-                        )}
-                        content={() => componentRef.current}
-                        documentTitle="Barangay Clerance Cert."
-                        pageStyle="print"
-                      />
-
-
-
                         
                     </div>
-                  </div>
-                )}          
-    </div>
-  );
-}
 
-export default ApprovedSubmissions;
+                  </div>
+                )}
+                {showReceiptForm && (
+        <div className="fixed inset-0 flex items-center justify-center z-20">
+          <div className="absolute bg-white p-4 rounded-lg shadow-lg border">
+            <div className="flex border-b mb-5">
+            <p className="text-lg font-semibold">Proof of Payment</p>
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              onClick={() => setShowReceiptForm(false)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            </div>
+            <label htmlFor="amount" className="block mb-1">Amount Paid:</label>
+              <input
+                type="number"
+                id="amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="Amount Paid"
+                className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-blue-200"
+              />
+
+              <label htmlFor="receiptId" className="block mb-1">Receipt ID:</label>
+              <input
+                type="text"
+                id="receiptId"
+                value={receiptId}
+                onChange={(e) => setReceiptId(e.target.value)}
+                placeholder="Receipt ID"
+                className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-blue-200"
+              />
+
+            <button
+              onClick={() => setShowPopup(true)}
+              className="mt-5 px-4 py-2 bg-green-300 text-gray-600 rounded-md hover:bg-green-500 hover:text-gray-100 focus:outline-none focus:ring focus:ring-blue-200"
+            >
+              Submit & mark as Approved
+            </button>
+          </div>
+        </div>
+      )}
+                          {showPopup && (
+                      <Confirmation
+                        text="Mark this submission as Approved?"
+                        onConfirm={handleConfirm}
+                        onCancel={handleCancel}
+                        confirmText="Confirm"
+                        cancelText="Cancel"
+                      
+                      />
+  
+                    )}
+              </div>
+          );
+        }
+        
+export default AcceptedSubmission;
+
+    

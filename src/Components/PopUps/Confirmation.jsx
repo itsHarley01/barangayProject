@@ -2,7 +2,7 @@
 
 const Confiramtion = ({ text, onConfirm, onCancel, confirmText, cancelText }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
       <div className="bg-white p-8 rounded-lg shadow-md">
         <p className="text-lg mb-4 text-black">{text}</p>
         <div className="flex justify-end">
